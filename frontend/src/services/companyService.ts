@@ -10,3 +10,8 @@ export async function getCompany(id: string) {
   const { data } = await api.get<CompanyRecord>(`/api/company/${id}`);
   return data;
 }
+
+export async function pushCompaniesToSheets() {
+  const { data } = await api.post<{ success: boolean; rows_synced: number }>("/api/push-to-sheets");
+  return data;
+}

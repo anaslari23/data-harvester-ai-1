@@ -62,7 +62,7 @@ export const useCompanyStore = create<CompanyState>()(
       setSelectedCompany: (selectedCompany) => set({ selectedCompany }),
     }),
     {
-      name: "dh-company-store",
+      name: "dh-company-store-v2",
       partialize: (state) => ({
         companies: state.companies,
         filters: state.filters,

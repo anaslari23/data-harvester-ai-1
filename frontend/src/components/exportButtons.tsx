@@ -1,8 +1,10 @@
 "use client";
 
-import { Download, FileJson, FileSpreadsheet, Sheet } from "lucide-react";
+import { useState } from "react";
+import { Download, FileJson, FileSpreadsheet, LoaderCircle, Sheet } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { pushCompaniesToSheets } from "@/services/companyService";
 import type { CompanyRecord } from "@/types/company";
 
 function downloadBlob(content: string, filename: string, type: string) {
@@ -25,6 +27,8 @@ function toCsv(rows: CompanyRecord[]) {
 }
 
 export function ExportButtons({ companies }: { companies: CompanyRecord[] }) {
+  const [syncing, setSyncing] = useState(false);
+
   return (
     <div className="flex flex-wrap gap-3">
       <Button variant="outline" onClick={() => downloadBlob(toCsv(companies), "companies.csv", "text/csv;charset=utf-8;")}> 
@@ -36,8 +40,23 @@ export function ExportButtons({ companies }: { companies: CompanyRecord[] }) {
       <Button variant="outline" onClick={() => downloadBlob(toCsv(companies), "companies.xls", "application/vnd.ms-excel")}> 
         <FileSpreadsheet className="mr-2 size-4" />Export Excel
       </Button>
-      <Button variant="default" onClick={() => window.alert("Connect this button to your Google Sheets sync endpoint.")}> 
-        <Sheet className="mr-2 size-4" />Push to Google Sheets
+      <Button
+        variant="default"
+        disabled={syncing || companies.length === 0}
+        onClick={async () => {
+          try {
+            setSyncing(true);
+            const result = await pushCompaniesToSheets();
+            window.alert(`Synced ${result.rows_synced} rows to Google Sheets.`);
+          } catch (error) {
+            const message = error instanceof Error ? error.message : "Google Sheets sync failed.";
+            window.alert(message);
+          } finally {
+            setSyncing(false);
+          }
+        }}
+      >
+        {syncing ? <LoaderCircle className="mr-2 size-4 animate-spin" /> : <Sheet className="mr-2 size-4" />}Push to Google Sheets
       </Button>
     </div>
   );

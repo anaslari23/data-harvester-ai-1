@@ -15,7 +15,7 @@ def setup_logging(log_dir: Path):
         rotation="10 MB",
         retention="7 days",
         level="INFO",
-        enqueue=True,
+        enqueue=False,
         backtrace=True,
         diagnose=False,
     )
@@ -24,4 +24,3 @@ def setup_logging(log_dir: Path):
         level="INFO",
     )
     return logger
-

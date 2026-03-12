@@ -77,7 +77,7 @@ export const useScraperStore = create<ScraperState>()(
       },
     }),
     {
-      name: "dh-scraper-store",
+      name: "dh-scraper-store-v2",
       partialize: (state) => ({
         currentJob: state.currentJob,
         jobStatus: state.jobStatus,

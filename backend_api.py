@@ -2,14 +2,17 @@ from __future__ import annotations
 
 import copy
 import json
-import os
-import re
 import site
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Literal, Optional
+from typing import Literal
 from uuid import uuid4
+
+PROJECT_ROOT = Path(__file__).parent
+PYDEPS = PROJECT_ROOT / "pydeps"
+if PYDEPS.exists() and str(PYDEPS) not in sys.path:
+    sys.path.insert(0, str(PYDEPS))
 
 user_site = site.getusersitepackages()
 if user_site and user_site not in sys.path:
@@ -21,7 +24,7 @@ except ImportError:  # pragma: no cover
     def load_dotenv(*_args, **_kwargs):
         return False
 
-from fastapi import BackgroundTasks, FastAPI, HTTPException, Query
+from fastapi import BackgroundTasks, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
@@ -34,7 +37,6 @@ from storage.sheet_writer import append_to_sheet
 from utils.logger import setup_logging
 from utils.query_builder import QueryInput, build_queries
 
-PROJECT_ROOT = Path(__file__).parent
 load_dotenv(PROJECT_ROOT / ".env")
 LOGGER = setup_logging(PROJECT_ROOT / "output" / "logs")
 BASE_SETTINGS = load_settings(PROJECT_ROOT)
@@ -42,44 +44,8 @@ PIPELINE = Pipeline()
 RESULTS_JSON = PROJECT_ROOT / "output" / "results.json"
 RESULTS_CSV = PROJECT_ROOT / "output" / "results.csv"
 GOOGLE_CREDS = PROJECT_ROOT / "credentials" / "google_credentials.json"
-USE_SEED_DATA = os.getenv("DATAHARVESTER_USE_SEED_DATA", "false").lower() in {"1", "true", "yes"}
-
-# ---------------------------------------------------------------------------
-# Inline extractor engine (no spaCy needed, works on Python 3.14)
-# ---------------------------------------------------------------------------
-_EXTRACT_PATTERNS = {
-    "emails": re.compile(r"[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+"),
-    "phones": re.compile(r"(?:\+?\d{1,3}[\s-]?)?(?:\(?\d{2,4}\)?[\s-]?)?\d{3,5}[\s-]?\d{4,6}"),
-    "revenue": re.compile(
-        r"(?:₹|\$|€|£|Rs\.?|INR|USD)?\s*[\d,.]+\s*(?:Cr|Crore|Million|Billion|Lakh)\b",
-        re.IGNORECASE,
-    ),
-    "erp": re.compile(r"\b(SAP|Oracle|Odoo|Dynamics|NetSuite|Tally|Zoho|Salesforce)\b", re.IGNORECASE),
-    "employees": re.compile(
-        r"(\d{1,6}\s*(?:\+|employees)|\d{1,6}\s*-\s*\d{1,6}\s*employees)", re.IGNORECASE
-    ),
-    "roles": re.compile(r"\b(CEO|CFO|CTO|Director|Founder|VP|President|Head|Managing\s*Director)\b", re.IGNORECASE),
-}
-
-def _extract_entities(text: str) -> dict[str, list[str]]:
-    results: dict[str, list[str]] = {}
-    for label, pat in _EXTRACT_PATTERNS.items():
-        matches = list({m.strip() for m in pat.findall(text) if m.strip()})
-        if matches:
-            results[label] = matches
-    return results
 
 
-def _enrich_record(record: dict[str, Any]) -> dict[str, Any]:
-    """Append an `_extracted` key with entity-extraction results."""
-    combined = " | ".join(str(v) for v in record.values() if v)
-    record["_extracted"] = _extract_entities(combined)
-    return record
-
-
-# ---------------------------------------------------------------------------
-# Models
-# ---------------------------------------------------------------------------
 class StartScrapeRequest(BaseModel):
     keyword: str = Field(min_length=1)
     industry: str = ""
@@ -100,74 +66,34 @@ class JobResponse(BaseModel):
     sources: list[str]
 
 
-# ---------------------------------------------------------------------------
-# App
-# ---------------------------------------------------------------------------
-app = FastAPI(title="DataHarvester API", version="0.2.0")
+app = FastAPI(title="DataHarvester API", version="0.3.2")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[],
+    allow_origin_regex=r"https?://(localhost|127\.0\.0\.1)(:\d+)?$",
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
+    max_age=86400,
 )
 
 JOBS: list[dict] = []
 COMPANIES: list[dict] = []
 
 
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
-def _load_seed_data() -> list[dict]:
-    """Optionally load data.json seed records when explicitly enabled."""
-    if not USE_SEED_DATA:
-        return []
-
-    data_json = PROJECT_ROOT / "data.json"
-    if not data_json.exists():
-        return []
-
-    try:
-        records = json.loads(data_json.read_text(encoding="utf-8"))
-        for idx, rec in enumerate(records, start=1):
-            if "id" not in rec:
-                rec["id"] = str(idx)
-            if "SL No." not in rec:
-                rec["SL No."] = str(idx)
-        return records
-    except Exception:
-        LOGGER.exception("Failed to load data.json")
-        return []
-
-
-def _load_results_json() -> list[dict]:
-    """Load output/results.json (scraped data)."""
+def _load_results() -> list[dict]:
     if not RESULTS_JSON.exists():
         return []
     try:
-        return json.loads(RESULTS_JSON.read_text(encoding="utf-8"))
+        records = json.loads(RESULTS_JSON.read_text(encoding="utf-8"))
+        for index, record in enumerate(records, start=1):
+            record.setdefault("id", str(index))
+            record.setdefault("SL No.", str(index))
+        return records
     except Exception:
         LOGGER.exception("Failed to load existing results.json")
         return []
-
-
-def _merge_companies(seed: list[dict], scraped: list[dict]) -> list[dict]:
-    """Merge seed data.json with any scraped results, deduplicating by company name."""
-    seen: set[str] = set()
-    merged: list[dict] = []
-    for rec in seed + scraped:
-        name = (rec.get("Company Name") or rec.get("company_name") or "").strip().lower()
-        if name and name in seen:
-            continue
-        if name:
-            seen.add(name)
-        merged.append(rec)
-    # Re-index
-    for idx, rec in enumerate(merged, start=1):
-        rec["id"] = str(idx)
-        rec["SL No."] = str(idx)
-    return merged
 
 
 def _configure_settings_for_sources(sources: list[str]) -> Settings:
@@ -188,20 +114,20 @@ def _configure_settings_for_sources(sources: list[str]) -> Settings:
 def _save_results(records: list[dict]) -> None:
     write_json(RESULTS_JSON, records)
     write_csv(RESULTS_CSV, records)
-    try:
-        append_to_sheet(
-            credentials_path=GOOGLE_CREDS,
-            sheet_name=BASE_SETTINGS.google_sheet_name,
-            worksheet_name=BASE_SETTINGS.google_worksheet_name,
-            records=records,
-        )
-    except Exception:
-        LOGGER.warning("Sheet sync skipped (credentials may not be configured).")
 
 
-# ---------------------------------------------------------------------------
-# Background scrape job
-# ---------------------------------------------------------------------------
+def _sync_current_records_to_sheets() -> bool:
+    if not COMPANIES:
+        return False
+    append_to_sheet(
+        credentials_path=GOOGLE_CREDS,
+        sheet_name=BASE_SETTINGS.google_sheet_name,
+        worksheet_name=BASE_SETTINGS.google_worksheet_name,
+        records=COMPANIES,
+    )
+    return True
+
+
 async def _run_scrape_job(job_id: str, payload: StartScrapeRequest) -> None:
     job = next((item for item in JOBS if item["id"] == job_id), None)
     if not job:
@@ -210,14 +136,13 @@ async def _run_scrape_job(job_id: str, payload: StartScrapeRequest) -> None:
     try:
         settings = _configure_settings_for_sources(job["sources"])
         engine = ScraperEngine(settings)
-        raw_inputs = [
+        queries = build_queries([
             QueryInput(
                 keyword=payload.keyword.strip(),
                 location=payload.location.strip() or None,
                 industry=payload.industry.strip() or None,
             )
-        ]
-        queries = build_queries(raw_inputs)
+        ])
         job["progress"] = 15
         LOGGER.info(f"Starting background scrape job {job_id} with {len(queries)} queries")
 
@@ -227,12 +152,11 @@ async def _run_scrape_job(job_id: str, payload: StartScrapeRequest) -> None:
         final_records = PIPELINE.run(scraper_result.records)
         for index, record in enumerate(final_records, start=1):
             record["id"] = str(index)
+            record["SL No."] = str(index)
 
-        # Merge with existing in-memory results (and optional seed)
-        merged = _merge_companies(COMPANIES, final_records)
         COMPANIES.clear()
-        COMPANIES.extend(merged)
-        _save_results(merged)
+        COMPANIES.extend(final_records)
+        _save_results(final_records)
 
         job["recordsFound"] = len(final_records)
         job["progress"] = 100
@@ -244,37 +168,20 @@ async def _run_scrape_job(job_id: str, payload: StartScrapeRequest) -> None:
         LOGGER.exception(f"Scrape job {job_id} failed: {exc}")
 
 
-# ---------------------------------------------------------------------------
-# Startup — loads prior scrape results; seed data is opt-in via env var
-# ---------------------------------------------------------------------------
 @app.on_event("startup")
 def startup_event() -> None:
     COMPANIES.clear()
-    seed = _load_seed_data()
-    scraped = _load_results_json()
-    merged = _merge_companies(seed, scraped)
-    COMPANIES.extend(merged)
-    LOGGER.info(
-        f"API startup complete. Loaded {len(COMPANIES)} companies "
-        f"({len(seed)} seed records, {len(scraped)} from prior scrape results)."
-    )
+    COMPANIES.extend(_load_results())
+    LOGGER.info(f"API startup complete. Loaded {len(COMPANIES)} companies from output/results.json.")
 
 
-# ---------------------------------------------------------------------------
-# Routes
-# ---------------------------------------------------------------------------
 @app.get("/api/jobs")
 def get_jobs() -> list[dict]:
     return JOBS
 
 
 @app.get("/api/companies")
-def get_companies(
-    location: Optional[str] = Query(None, description="Filter by location (case-insensitive substring match)")
-) -> list[dict]:
-    if location:
-        loc_lower = location.lower()
-        return [c for c in COMPANIES if loc_lower in (c.get("Address") or "").lower()]
+def get_companies() -> list[dict]:
     return COMPANIES
 
 
@@ -284,17 +191,6 @@ def get_company(company_id: str) -> dict:
     if not company:
         raise HTTPException(status_code=404, detail="Company not found")
     return company
-
-
-@app.get("/api/extract")
-def extract_from_data() -> dict:
-    """
-    Run the pattern-based extraction engine on currently available records
-    and return the enriched dataset with extracted entities (emails, phones,
-    revenue, ERP, leadership roles, employee count).
-    """
-    enriched = [_enrich_record(rec) for rec in COMPANIES]
-    return {"count": len(enriched), "companies": enriched}
 
 
 @app.post("/api/start-scrape")
@@ -314,3 +210,16 @@ def start_scrape(payload: StartScrapeRequest, background_tasks: BackgroundTasks)
     JOBS.insert(0, job)
     background_tasks.add_task(_run_scrape_job, job["id"], payload)
     return job
+
+
+@app.post("/api/push-to-sheets")
+def push_to_sheets() -> dict:
+    try:
+        synced = _sync_current_records_to_sheets()
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Google Sheets sync failed: {exc}") from exc
+
+    if not synced:
+        raise HTTPException(status_code=400, detail="No records available to sync.")
+
+    return {"success": True, "rows_synced": len(COMPANIES)}
