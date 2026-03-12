@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 import json
+import os
 import re
 import site
 import sys
@@ -40,8 +41,8 @@ BASE_SETTINGS = load_settings(PROJECT_ROOT)
 PIPELINE = Pipeline()
 RESULTS_JSON = PROJECT_ROOT / "output" / "results.json"
 RESULTS_CSV = PROJECT_ROOT / "output" / "results.csv"
-DATA_JSON = PROJECT_ROOT / "data.json"
 GOOGLE_CREDS = PROJECT_ROOT / "credentials" / "google_credentials.json"
+USE_SEED_DATA = os.getenv("DATAHARVESTER_USE_SEED_DATA", "false").lower() in {"1", "true", "yes"}
 
 # ---------------------------------------------------------------------------
 # Inline extractor engine (no spaCy needed, works on Python 3.14)
@@ -118,12 +119,17 @@ COMPANIES: list[dict] = []
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
-def _load_data_json() -> list[dict]:
-    """Load data.json — the primary seed dataset."""
-    if not DATA_JSON.exists():
+def _load_seed_data() -> list[dict]:
+    """Optionally load data.json seed records when explicitly enabled."""
+    if not USE_SEED_DATA:
         return []
+
+    data_json = PROJECT_ROOT / "data.json"
+    if not data_json.exists():
+        return []
+
     try:
-        records = json.loads(DATA_JSON.read_text(encoding="utf-8"))
+        records = json.loads(data_json.read_text(encoding="utf-8"))
         for idx, rec in enumerate(records, start=1):
             if "id" not in rec:
                 rec["id"] = str(idx)
@@ -222,9 +228,8 @@ async def _run_scrape_job(job_id: str, payload: StartScrapeRequest) -> None:
         for index, record in enumerate(final_records, start=1):
             record["id"] = str(index)
 
-        # Merge with seed data
-        seed = _load_data_json()
-        merged = _merge_companies(seed, final_records)
+        # Merge with existing in-memory results (and optional seed)
+        merged = _merge_companies(COMPANIES, final_records)
         COMPANIES.clear()
         COMPANIES.extend(merged)
         _save_results(merged)
@@ -240,16 +245,19 @@ async def _run_scrape_job(job_id: str, payload: StartScrapeRequest) -> None:
 
 
 # ---------------------------------------------------------------------------
-# Startup — loads data.json FIRST, then merges any existing results.json
+# Startup — loads prior scrape results; seed data is opt-in via env var
 # ---------------------------------------------------------------------------
 @app.on_event("startup")
 def startup_event() -> None:
     COMPANIES.clear()
-    seed = _load_data_json()
+    seed = _load_seed_data()
     scraped = _load_results_json()
     merged = _merge_companies(seed, scraped)
     COMPANIES.extend(merged)
-    LOGGER.info(f"API startup complete. Loaded {len(COMPANIES)} companies ({len(seed)} from data.json, {len(scraped)} from results.json).")
+    LOGGER.info(
+        f"API startup complete. Loaded {len(COMPANIES)} companies "
+        f"({len(seed)} seed records, {len(scraped)} from prior scrape results)."
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -281,12 +289,11 @@ def get_company(company_id: str) -> dict:
 @app.get("/api/extract")
 def extract_from_data() -> dict:
     """
-    Read data.json, run the pattern-based extraction engine on every record,
+    Run the pattern-based extraction engine on currently available records
     and return the enriched dataset with extracted entities (emails, phones,
     revenue, ERP, leadership roles, employee count).
     """
-    seed = _load_data_json()
-    enriched = [_enrich_record(rec) for rec in seed]
+    enriched = [_enrich_record(rec) for rec in COMPANIES]
     return {"count": len(enriched), "companies": enriched}
 
 

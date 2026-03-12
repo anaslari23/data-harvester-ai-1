@@ -51,6 +51,16 @@ The system will:
 5. Deduplicate and map records to the final schema.
 6. Save results to `output/results.json`, `output/results.csv`, and Google Sheets.
 
+## Data Source Behavior (Important)
+
+By default, the API now serves **live scraped results only** (from `output/results.json`) and does **not** preload `data.json` seed records.
+
+If you want to include `data.json` as startup seed data, set:
+
+```bash
+export DATAHARVESTER_USE_SEED_DATA=true
+```
+
 ## Notes
 
 - This project ships with conservative default scrapers and HTML parsing logic. Many sites change their structure often; you may need to adjust individual scraper implementations and respect each site's terms of service and robots.txt.
