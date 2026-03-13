@@ -1,11 +1,11 @@
-platforms:
-  google: true
-  maps: true
-  linkedin: true
-  website: true
-  indiamart: true
-  tradeindia: true
-  justdial: true
-  clutch: true
-  goodfirms: true
+discovery: true
+website: true
 
+google: false
+maps: false
+linkedin: false
+indiamart: false
+tradeindia: false
+justdial: false
+clutch: false
+goodfirms: false

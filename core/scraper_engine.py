@@ -19,9 +19,11 @@ from scrapers.justdial_scraper import JustDialScraper
 from scrapers.clutch_scraper import ClutchScraper
 from scrapers.goodfirms_scraper import GoodFirmsScraper
 from utils.request_manager import RequestManager
+from scrapers.discovery_scraper import DiscoveryScraper
 
 
 SCRAPER_REGISTRY: Dict[str, Type[BaseScraper]] = {
+    "discovery": DiscoveryScraper,
     "google": GoogleScraper,
     "maps": MapsScraper,
     "website": WebsiteScraper,
@@ -32,7 +34,6 @@ SCRAPER_REGISTRY: Dict[str, Type[BaseScraper]] = {
     "clutch": ClutchScraper,
     "goodfirms": GoodFirmsScraper,
 }
-
 
 @dataclass
 class ScraperResult:
@@ -46,6 +47,9 @@ class ScraperEngine:
     def _active_platforms(self) -> Sequence[str]:
         p = self.settings.platforms
         platforms: List[str] = []
+
+        if getattr(p, "discovery", False):
+            platforms.append("discovery")
         if p.google:
             platforms.append("google")
         if p.maps:

@@ -4,3 +4,48 @@ node_modules/
 pydeps/
 __pycache__/
 output/logs/*.log
+
+# Environment files and API keys
+*.env
+*.env.*
+.env.example
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+frontend/.env*
+
+# Credentials and sensitive data
+credentials/
+*.key
+*.pem
+*.p12
+*.pfx
+secrets.json
+config/secrets.yaml
+
+# Data files (may contain sensitive information)
+data.json
+*.csv.bak
+*.json.bak
+
+# Build artifacts
+frontend/tsconfig.tsbuildinfo
+*.pyc
+*.pyo
+*.pyd
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db

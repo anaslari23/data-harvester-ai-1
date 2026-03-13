@@ -1,26 +1,24 @@
-from __future__ import annotations
-
-from typing import Dict, List
-
 from extractors.company_extractor import parse_company_page
 from scrapers.base_scraper import BaseScraper
-
+from utils.firecrawl_client import FirecrawlClient
+import os
 
 class WebsiteScraper(BaseScraper):
 
-    async def search_and_extract(self, query: str) -> List[Dict[str, str]]:
+    async def search_and_extract(self, query):
 
-        # Only process real website URLs
-        if "http://" not in query and "https://" not in query:
+        if not query.startswith("http"):
             return []
 
-        html = await self.request_manager.get_text(query)
+        api_key = os.getenv("FIRECRAWL_API_KEY")
 
-        # Use the new company extractor
-        company_data = parse_company_page(
-            html=html,
-            url=query,
-            sl_no=1
-        )
+        firecrawl = FirecrawlClient(api_key)
 
-        return [company_data]
+        content = firecrawl.scrape(query)
+
+        if not content:
+            return []
+
+        company = parse_company_page(content, query)
+
+        return [company]
