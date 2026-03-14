@@ -38,12 +38,5 @@ USER appuser
 # Install Playwright browsers as the non-root user
 RUN playwright install chromium
 
-# Expose port (if running web interface)
-EXPOSE 8000
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python -c "import requests; requests.get('http://localhost:8000/health')" || exit 1
-
 # Default command
 CMD ["python", "run_backend.py"]
