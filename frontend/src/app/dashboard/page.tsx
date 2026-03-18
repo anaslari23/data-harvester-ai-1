@@ -58,11 +58,14 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-8">
-      <section>
-        <p className="text-sm uppercase tracking-[0.24em] text-[var(--muted-foreground)]">Overview</p>
-        <h2 className="mt-2 text-4xl font-semibold text-white">Global Company Intelligence Dashboard</h2>
-        <p className="mt-3 max-w-3xl text-base text-[var(--muted-foreground)]">
-          Track scraping coverage, source activity, ERP penetration, and the shape of your global company dataset from one command center.
+      <section className="mb-4">
+        <div className="mb-3 flex items-center gap-3">
+          <div className="h-px w-8 bg-[#5e35b1]" />
+          <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#a374ff]">Executive Overview</p>
+        </div>
+        <h2 className="text-4xl font-black tracking-tight text-white md:text-5xl">Intelligence Dashboard</h2>
+        <p className="mt-4 max-w-2xl text-base leading-relaxed text-[#888888]">
+          Track global scraping coverage, active extraction nodes, and ERP footprint intelligence from one command center.
         </p>
       </section>
 

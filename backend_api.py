@@ -38,6 +38,7 @@ from core.scraper_engine import ScraperEngine
 from storage.csv_writer import write_csv
 from storage.json_writer import write_json
 from storage.sheet_writer import append_to_sheet
+from storage.supabase_writer import get_all_jobs, upsert_job, get_all_companies, upsert_companies, clear_all_jobs
 from utils.logger import setup_logging
 from utils.query_builder import QueryInput, build_queries
 
@@ -144,6 +145,10 @@ COMPANIES: list[dict] = []
 # ---------------------------------------------------------------------------
 
 def _load_results() -> list[dict]:
+    db_records = get_all_companies()
+    if db_records:
+        return db_records
+
     if not RESULTS_JSON.exists():
         return []
     try:
@@ -158,7 +163,11 @@ def _load_results() -> list[dict]:
 
 
 def _load_jobs() -> list[dict]:
-    """Restore jobs from disk so they survive API restarts."""
+    """Restore jobs from disk or Supabase so they survive API restarts."""
+    db_jobs = get_all_jobs()
+    if db_jobs:
+        return db_jobs
+
     if not JOBS_JSON.exists():
         return []
     try:
@@ -168,16 +177,21 @@ def _load_jobs() -> list[dict]:
 
 
 def _save_jobs() -> None:
-    """Persist current JOBS list to disk."""
+    """Persist current JOBS list to disk and Supabase."""
     try:
         JOBS_JSON.write_text(json.dumps(JOBS, indent=2), encoding="utf-8")
     except Exception:
         LOGGER.warning("Could not persist jobs to disk")
+    
+    if JOBS:
+        upsert_job(JOBS)
 
 
 def _save_results(records: list[dict]) -> None:
     write_json(RESULTS_JSON, records)
     write_csv(RESULTS_CSV, records)
+    if records:
+        upsert_companies(records)
 
 
 def _sync_to_sheets() -> int:
@@ -531,4 +545,5 @@ def clear_jobs() -> dict:
     """Clear all job history."""
     JOBS.clear()
     _save_jobs()
+    clear_all_jobs()
     return {"cleared": True}

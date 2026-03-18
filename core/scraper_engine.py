@@ -21,6 +21,7 @@ from scrapers.goodfirms_scraper import GoodFirmsScraper
 from utils.request_manager import RequestManager
 from scrapers.discovery_scraper import DiscoveryScraper
 from scrapers.google_places_scraper import GooglePlacesScraper
+from scrapers.searx_scraper import SearxScraper
 
 
 SCRAPER_REGISTRY: Dict[str, Type[BaseScraper]] = {
@@ -34,8 +35,8 @@ SCRAPER_REGISTRY: Dict[str, Type[BaseScraper]] = {
     "justdial": JustDialScraper,
     "clutch": ClutchScraper,
     "goodfirms": GoodFirmsScraper,
-    # Official API — no bot-blocking, requires GOOGLE_API_KEY env var
     "google_places": GooglePlacesScraper,
+    "searx": SearxScraper,
 }
 
 
@@ -74,6 +75,8 @@ class ScraperEngine:
             platforms.append("goodfirms")
         if getattr(p, "google_places", False):
             platforms.append("google_places")
+        if getattr(p, "searx", False):
+            platforms.append("searx")
         return platforms
 
     async def _run_platforms_for_term(
@@ -81,7 +84,7 @@ class ScraperEngine:
         term: str,
         platforms: Sequence[str],
         request_manager: RequestManager,
-        step_callback=None
+        step_callback=None,
     ) -> List[Dict[str, Any]]:
         tasks = []
         platform_names: List[str] = []
@@ -95,7 +98,7 @@ class ScraperEngine:
                 continue
             scraper = scraper_cls(request_manager=request_manager)
             await scraper.initialize()
-            
+
             # Helper to bind platform name explicitly to the result
             async def run_task(scr, plt_name, query):
                 try:
@@ -114,9 +117,13 @@ class ScraperEngine:
                 if step_callback:
                     step_callback()
                 if isinstance(out, Exception):
-                    logger.error(f"Scraper error for platform='{platform_name}' query='{term}': {out}")
+                    logger.error(
+                        f"Scraper error for platform='{platform_name}' query='{term}': {out}"
+                    )
                     continue
-                logger.info(f"Platform '{platform_name}' yielded {len(out)} records for query '{term}'")
+                logger.info(
+                    f"Platform '{platform_name}' yielded {len(out)} records for query '{term}'"
+                )
                 results.extend(out)
 
         return results
@@ -140,7 +147,7 @@ class ScraperEngine:
         query: str,
         platforms: Sequence[str],
         request_manager: RequestManager,
-        step_callback=None
+        step_callback=None,
     ) -> List[Dict[str, Any]]:
         use_discovery = "discovery" in platforms
         use_website = "website" in platforms
@@ -151,30 +158,28 @@ class ScraperEngine:
         discovery_records: List[Dict[str, Any]] = []
         if use_discovery:
             discovery_records = await self._run_platforms_for_term(
-                query,
-                ["discovery"],
-                request_manager,
-                step_callback
+                query, ["discovery"], request_manager, step_callback
             )
             results.extend(discovery_records)
 
         if remaining:
             remaining_records = await self._run_platforms_for_term(
-                query,
-                remaining,
-                request_manager,
-                step_callback
+                query, remaining, request_manager, step_callback
             )
             results.extend(remaining_records)
 
         if use_website:
-            website_targets = self._extract_website_targets(discovery_records)
+            website_targets = self._extract_website_targets(results)
             if website_targets:
                 website_batches = [
-                    self._run_platforms_for_term(url, ["website"], request_manager, step_callback)
+                    self._run_platforms_for_term(
+                        url, ["website"], request_manager, step_callback
+                    )
                     for url in website_targets
                 ]
-                website_results = await asyncio.gather(*website_batches, return_exceptions=True)
+                website_results = await asyncio.gather(
+                    *website_batches, return_exceptions=True
+                )
                 for url, out in zip(website_targets, website_results):
                     if isinstance(out, Exception):
                         logger.error(f"Website scraping failed for '{url}': {out}")
@@ -187,13 +192,15 @@ class ScraperEngine:
 
         return results
 
-    async def run_async(self, queries: Iterable[str], progress_callback=None) -> ScraperResult:
+    async def run_async(
+        self, queries: Iterable[str], progress_callback=None
+    ) -> ScraperResult:
         platforms = self._active_platforms()
         all_records: List[Dict[str, Any]] = []
         query_list = list(queries)
         total_queries = len(query_list)
         logger.info(f"Queries executed: {total_queries}")
-        
+
         total_steps = len(platforms) * total_queries
         steps_done = 0
 
@@ -206,9 +213,13 @@ class ScraperEngine:
                 progress_callback(min(current_progress, 84))
 
         async with RequestManager(proxy_config=self.settings.proxies.__dict__) as rm:
-            for idx, query in enumerate(tqdm_asyncio(query_list, desc="Scraping queries")):
+            for idx, query in enumerate(
+                tqdm_asyncio(query_list, desc="Scraping queries")
+            ):
                 try:
-                    records = await self._run_for_query(query, platforms, rm, step_callback)
+                    records = await self._run_for_query(
+                        query, platforms, rm, step_callback
+                    )
                     logger.info(f"Query '{query}' yielded {len(records)} raw records")
                     all_records.extend(records)
                 except Exception as exc:

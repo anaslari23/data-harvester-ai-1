@@ -125,3 +125,250 @@
 2026-03-12 10:42:37.892 | INFO     | core.scraper_engine:run_async:102 - Query 'tech startups technology' yielded 0 raw records
 2026-03-12 10:42:37.900 | INFO     | core.orchestrator:run:61 - Collected 0 raw records.
 2026-03-12 10:42:37.900 | INFO     | core.orchestrator:run:64 - Pipeline produced 0 final records.
+2026-03-19 00:19:43.573 | INFO     | __main__:main:30 - DataHarvester starting up
+2026-03-19 00:19:43.584 | INFO     | core.orchestrator:run:66 - Running scraper engine for 17 jobs / queries.
+2026-03-19 00:19:43.584 | INFO     | core.scraper_engine:run_async:195 - Queries executed: 17
+2026-03-19 00:19:45.267 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'discovery' yielded 0 records for query 'erp companies'
+2026-03-19 00:19:45.267 | WARNING  | scrapers.google_places_scraper:search_and_extract:41 - GOOGLE_API_KEY not set — skipping Google Places scraper. Add GOOGLE_API_KEY=your_key to .env to enable.
+2026-03-19 00:19:45.268 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'google_places' yielded 0 records for query 'erp companies'
+2026-03-19 00:19:47.056 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'maps' yielded 0 records for query 'erp companies'
+2026-03-19 00:20:14.293 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'linkedin' yielded 4 records for query 'erp companies'
+2026-03-19 00:20:24.541 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'google' yielded 10 records for query 'erp companies'
+2026-03-19 00:20:24.542 | WARNING  | core.scraper_engine:_run_for_query:184 - No discovered website targets for query 'erp companies', skipping website scraper
+2026-03-19 00:20:24.542 | INFO     | core.scraper_engine:run_async:212 - Query 'erp companies' yielded 14 raw records
+2026-03-19 00:20:25.956 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'discovery' yielded 0 records for query 'ERP companies'
+2026-03-19 00:20:25.956 | WARNING  | scrapers.google_places_scraper:search_and_extract:41 - GOOGLE_API_KEY not set — skipping Google Places scraper. Add GOOGLE_API_KEY=your_key to .env to enable.
+2026-03-19 00:20:25.957 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'google_places' yielded 0 records for query 'ERP companies'
+2026-03-19 00:20:27.387 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'maps' yielded 0 records for query 'ERP companies'
+2026-03-19 00:20:27.676 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'google' yielded 0 records for query 'ERP companies'
+2026-03-19 00:20:28.066 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'linkedin' yielded 0 records for query 'ERP companies'
+2026-03-19 00:20:28.066 | WARNING  | core.scraper_engine:_run_for_query:184 - No discovered website targets for query 'ERP companies', skipping website scraper
+2026-03-19 00:20:28.066 | INFO     | core.scraper_engine:run_async:212 - Query 'ERP companies' yielded 0 raw records
+2026-03-19 00:20:30.028 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'discovery' yielded 0 records for query 'ERP software providers'
+2026-03-19 00:20:30.029 | WARNING  | scrapers.google_places_scraper:search_and_extract:41 - GOOGLE_API_KEY not set — skipping Google Places scraper. Add GOOGLE_API_KEY=your_key to .env to enable.
+2026-03-19 00:20:30.029 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'google_places' yielded 0 records for query 'ERP software providers'
+2026-03-19 00:20:31.098 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'google' yielded 0 records for query 'ERP software providers'
+2026-03-19 00:20:32.054 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'maps' yielded 0 records for query 'ERP software providers'
+2026-03-19 00:20:34.251 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'linkedin' yielded 0 records for query 'ERP software providers'
+2026-03-19 00:20:34.251 | WARNING  | core.scraper_engine:_run_for_query:184 - No discovered website targets for query 'ERP software providers', skipping website scraper
+2026-03-19 00:20:34.251 | INFO     | core.scraper_engine:run_async:212 - Query 'ERP software providers' yielded 0 raw records
+2026-03-19 00:20:35.862 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'discovery' yielded 0 records for query 'enterprise resource planning companies'
+2026-03-19 00:20:35.863 | WARNING  | scrapers.google_places_scraper:search_and_extract:41 - GOOGLE_API_KEY not set — skipping Google Places scraper. Add GOOGLE_API_KEY=your_key to .env to enable.
+2026-03-19 00:20:35.863 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'google_places' yielded 0 records for query 'enterprise resource planning companies'
+2026-03-19 00:20:37.295 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'google' yielded 0 records for query 'enterprise resource planning companies'
+2026-03-19 00:20:39.151 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'maps' yielded 0 records for query 'enterprise resource planning companies'
+2026-03-19 00:20:39.372 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'linkedin' yielded 0 records for query 'enterprise resource planning companies'
+2026-03-19 00:20:39.372 | WARNING  | core.scraper_engine:_run_for_query:184 - No discovered website targets for query 'enterprise resource planning companies', skipping website scraper
+2026-03-19 00:20:39.372 | INFO     | core.scraper_engine:run_async:212 - Query 'enterprise resource planning companies' yielded 0 raw records
+2026-03-19 00:20:42.108 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'discovery' yielded 0 records for query 'ERP vendors'
+2026-03-19 00:20:42.112 | WARNING  | scrapers.google_places_scraper:search_and_extract:41 - GOOGLE_API_KEY not set — skipping Google Places scraper. Add GOOGLE_API_KEY=your_key to .env to enable.
+2026-03-19 00:20:42.112 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'google_places' yielded 0 records for query 'ERP vendors'
+2026-03-19 00:20:43.195 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'google' yielded 0 records for query 'ERP vendors'
+2026-03-19 00:20:44.440 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'maps' yielded 0 records for query 'ERP vendors'
+2026-03-19 00:20:47.024 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'linkedin' yielded 0 records for query 'ERP vendors'
+2026-03-19 00:20:47.024 | WARNING  | core.scraper_engine:_run_for_query:184 - No discovered website targets for query 'ERP vendors', skipping website scraper
+2026-03-19 00:20:47.024 | INFO     | core.scraper_engine:run_async:212 - Query 'ERP vendors' yielded 0 raw records
+2026-03-19 00:20:48.359 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'discovery' yielded 0 records for query 'SAP partners'
+2026-03-19 00:20:48.359 | WARNING  | scrapers.google_places_scraper:search_and_extract:41 - GOOGLE_API_KEY not set — skipping Google Places scraper. Add GOOGLE_API_KEY=your_key to .env to enable.
+2026-03-19 00:20:48.359 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'google_places' yielded 0 records for query 'SAP partners'
+2026-03-19 00:20:50.162 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'google' yielded 0 records for query 'SAP partners'
+2026-03-19 00:20:51.820 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'maps' yielded 0 records for query 'SAP partners'
+2026-03-19 00:20:52.548 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'linkedin' yielded 0 records for query 'SAP partners'
+2026-03-19 00:20:52.548 | WARNING  | core.scraper_engine:_run_for_query:184 - No discovered website targets for query 'SAP partners', skipping website scraper
+2026-03-19 00:20:52.548 | INFO     | core.scraper_engine:run_async:212 - Query 'SAP partners' yielded 0 raw records
+2026-03-19 00:20:54.240 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'discovery' yielded 0 records for query 'Oracle ERP partners'
+2026-03-19 00:20:54.241 | WARNING  | scrapers.google_places_scraper:search_and_extract:41 - GOOGLE_API_KEY not set — skipping Google Places scraper. Add GOOGLE_API_KEY=your_key to .env to enable.
+2026-03-19 00:20:54.241 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'google_places' yielded 0 records for query 'Oracle ERP partners'
+2026-03-19 00:20:56.706 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'google' yielded 0 records for query 'Oracle ERP partners'
+2026-03-19 00:20:58.211 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'maps' yielded 0 records for query 'Oracle ERP partners'
+2026-03-19 00:21:00.840 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'linkedin' yielded 0 records for query 'Oracle ERP partners'
+2026-03-19 00:21:00.840 | WARNING  | core.scraper_engine:_run_for_query:184 - No discovered website targets for query 'Oracle ERP partners', skipping website scraper
+2026-03-19 00:21:00.840 | INFO     | core.scraper_engine:run_async:212 - Query 'Oracle ERP partners' yielded 0 raw records
+2026-03-19 00:21:03.372 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'discovery' yielded 0 records for query 'Microsoft Dynamics partners'
+2026-03-19 00:21:03.373 | WARNING  | scrapers.google_places_scraper:search_and_extract:41 - GOOGLE_API_KEY not set — skipping Google Places scraper. Add GOOGLE_API_KEY=your_key to .env to enable.
+2026-03-19 00:21:03.373 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'google_places' yielded 0 records for query 'Microsoft Dynamics partners'
+2026-03-19 00:21:04.455 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'google' yielded 0 records for query 'Microsoft Dynamics partners'
+2026-03-19 00:21:07.565 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'maps' yielded 0 records for query 'Microsoft Dynamics partners'
+2026-03-19 00:21:07.852 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'linkedin' yielded 0 records for query 'Microsoft Dynamics partners'
+2026-03-19 00:21:07.853 | WARNING  | core.scraper_engine:_run_for_query:184 - No discovered website targets for query 'Microsoft Dynamics partners', skipping website scraper
+2026-03-19 00:21:07.853 | INFO     | core.scraper_engine:run_async:212 - Query 'Microsoft Dynamics partners' yielded 0 raw records
+2026-03-19 00:21:09.439 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'discovery' yielded 0 records for query 'ERP implementation firms'
+2026-03-19 00:21:09.440 | WARNING  | scrapers.google_places_scraper:search_and_extract:41 - GOOGLE_API_KEY not set — skipping Google Places scraper. Add GOOGLE_API_KEY=your_key to .env to enable.
+2026-03-19 00:21:09.440 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'google_places' yielded 0 records for query 'ERP implementation firms'
+2026-03-19 00:21:13.544 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'maps' yielded 0 records for query 'ERP implementation firms'
+2026-03-19 00:21:13.635 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'google' yielded 0 records for query 'ERP implementation firms'
+2026-03-19 00:21:15.840 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'linkedin' yielded 0 records for query 'ERP implementation firms'
+2026-03-19 00:21:15.841 | WARNING  | core.scraper_engine:_run_for_query:184 - No discovered website targets for query 'ERP implementation firms', skipping website scraper
+2026-03-19 00:21:15.841 | INFO     | core.scraper_engine:run_async:212 - Query 'ERP implementation firms' yielded 0 raw records
+2026-03-19 00:21:17.672 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'discovery' yielded 0 records for query 'sap partners'
+2026-03-19 00:21:17.673 | WARNING  | scrapers.google_places_scraper:search_and_extract:41 - GOOGLE_API_KEY not set — skipping Google Places scraper. Add GOOGLE_API_KEY=your_key to .env to enable.
+2026-03-19 00:21:17.673 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'google_places' yielded 0 records for query 'sap partners'
+2026-03-19 00:21:19.538 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'google' yielded 0 records for query 'sap partners'
+2026-03-19 00:21:19.621 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'maps' yielded 0 records for query 'sap partners'
+2026-03-19 00:21:21.991 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'linkedin' yielded 0 records for query 'sap partners'
+2026-03-19 00:21:21.991 | WARNING  | core.scraper_engine:_run_for_query:184 - No discovered website targets for query 'sap partners', skipping website scraper
+2026-03-19 00:21:21.991 | INFO     | core.scraper_engine:run_async:212 - Query 'sap partners' yielded 0 raw records
+2026-03-19 00:21:23.483 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'discovery' yielded 0 records for query 'logistics companies'
+2026-03-19 00:21:23.484 | WARNING  | scrapers.google_places_scraper:search_and_extract:41 - GOOGLE_API_KEY not set — skipping Google Places scraper. Add GOOGLE_API_KEY=your_key to .env to enable.
+2026-03-19 00:21:23.484 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'google_places' yielded 0 records for query 'logistics companies'
+2026-03-19 00:21:25.442 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'google' yielded 0 records for query 'logistics companies'
+2026-03-19 00:21:27.605 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'maps' yielded 0 records for query 'logistics companies'
+2026-03-19 00:21:27.744 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'linkedin' yielded 0 records for query 'logistics companies'
+2026-03-19 00:21:27.744 | WARNING  | core.scraper_engine:_run_for_query:184 - No discovered website targets for query 'logistics companies', skipping website scraper
+2026-03-19 00:21:27.744 | INFO     | core.scraper_engine:run_async:212 - Query 'logistics companies' yielded 0 raw records
+2026-03-19 00:21:30.251 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'discovery' yielded 0 records for query 'logistics companies logistics'
+2026-03-19 00:21:30.252 | WARNING  | scrapers.google_places_scraper:search_and_extract:41 - GOOGLE_API_KEY not set — skipping Google Places scraper. Add GOOGLE_API_KEY=your_key to .env to enable.
+2026-03-19 00:21:30.252 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'google_places' yielded 0 records for query 'logistics companies logistics'
+2026-03-19 00:21:31.281 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'google' yielded 0 records for query 'logistics companies logistics'
+2026-03-19 00:21:34.227 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'maps' yielded 0 records for query 'logistics companies logistics'
+2026-03-19 00:21:35.125 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'linkedin' yielded 0 records for query 'logistics companies logistics'
+2026-03-19 00:21:35.126 | WARNING  | core.scraper_engine:_run_for_query:184 - No discovered website targets for query 'logistics companies logistics', skipping website scraper
+2026-03-19 00:21:35.126 | INFO     | core.scraper_engine:run_async:212 - Query 'logistics companies logistics' yielded 0 raw records
+2026-03-19 00:21:37.510 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'discovery' yielded 0 records for query 'manufacturing companies'
+2026-03-19 00:21:37.511 | WARNING  | scrapers.google_places_scraper:search_and_extract:41 - GOOGLE_API_KEY not set — skipping Google Places scraper. Add GOOGLE_API_KEY=your_key to .env to enable.
+2026-03-19 00:21:37.511 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'google_places' yielded 0 records for query 'manufacturing companies'
+2026-03-19 00:21:39.057 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'maps' yielded 0 records for query 'manufacturing companies'
+2026-03-19 00:21:41.761 | INFO     | core.scraper_engine:_run_platforms_for_term:119 - Platform 'google' yielded 0 records for query 'manufacturing companies'
+2026-03-19 00:56:09.636 | INFO     | backend_api:_run_scrape_job:244 - Starting background scrape job %s with %d queries
+2026-03-19 00:56:09.637 | INFO     | core.scraper_engine:run_async:202 - Queries executed: 3
+2026-03-19 00:56:12.011 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'discovery' yielded 0 records for query 'oil'
+2026-03-19 00:56:12.012 | WARNING  | scrapers.google_places_scraper:search_and_extract:41 - GOOGLE_API_KEY not set — skipping Google Places scraper. Add GOOGLE_API_KEY=your_key to .env to enable.
+2026-03-19 00:56:12.020 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'google_places' yielded 0 records for query 'oil'
+2026-03-19 00:56:14.295 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'justdial' yielded 0 records for query 'oil'
+2026-03-19 00:56:14.336 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'tradeindia' yielded 0 records for query 'oil'
+2026-03-19 00:56:21.327 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'linkedin' yielded 0 records for query 'oil'
+2026-03-19 00:56:27.492 | WARNING  | scrapers.indiamart_scraper:search_and_extract:22 - IndiaMart search fetch failed for 'oil': RetryError[<Future at 0x10ee6f310 state=finished raised ClientResponseError>]
+2026-03-19 00:56:27.494 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'indiamart' yielded 0 records for query 'oil'
+2026-03-19 00:57:39.270 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'maps' yielded 8 records for query 'oil'
+2026-03-19 00:57:42.524 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'searx' yielded 0 records for query 'oil'
+2026-03-19 00:58:12.039 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'google' yielded 10 records for query 'oil'
+2026-03-19 00:58:12.040 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'website' yielded 0 records for query 'https://locator.iocl.com/indianoil-gopal-traders-petrol-pump-rajarhat-kolkata-200429/Contact-Us'
+2026-03-19 00:58:12.040 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'website' yielded 0 records for query 'https://www.oil-india.com/Oil-offices'
+2026-03-19 00:58:12.040 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'website' yielded 0 records for query 'https://cx.indianoil.in/webcenter/portal/Servo/pages_locateus'
+2026-03-19 00:58:12.040 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'website' yielded 0 records for query 'https://locator.iocl.com/indianoil-mira-service-station-petrol-pump-rajarhat-kolkata-183104/Home'
+2026-03-19 00:58:12.040 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'website' yielded 0 records for query 'https://www.shell.us/about-us/who-we-are/contact-shell.html'
+2026-03-19 00:58:12.041 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'website' yielded 0 records for query 'https://www.oil-india.com/contact-us-new'
+2026-03-19 00:58:12.041 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'website' yielded 0 records for query 'https://www.moneycontrol.com/company-facts/oilindia/management/OI13'
+2026-03-19 00:58:12.041 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'website' yielded 0 records for query 'https://gulfinc.com/contacts-locations'
+2026-03-19 00:58:12.041 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'website' yielded 0 records for query 'https://duckduckgo.com/y.js?ad_domain=brinstrument.com&ad_provider=bingv7aa&ad_type=txad&click_metadata=BdLTpHdwOyp0sHx6rKOQo1WLcHvsT4qgfHJlQD_ejd%2DStyjpV5BSp0bgeEGBZZRVN%2DATPDf6rdFZEHT1kfezFa65VD3z0K%2DX9sKfcAR9L4vWgrQaV8Qo%2DquMrvknfWtKFdigEkdHd4h_dbZoi1YTOqCOg2W0uBIqZIjoaXYB8Lw.JEyd96is2Iwa3vczdC0WxQ&rut=7d162da819fdc79bce4c1971465faa355d28278ff0c28c6cb3adaddd8176396d&u3=https%3A%2F%2Fwww.bing.com%2Faclick%3Fld%3De8WcfevOwYmvG1Zc5Ogx1InjVUCUz1BJa9llyepf5qsglZR04t9frhlLUWZ7gM2%2DK2QlQeDsLRXBLe%2D5TsS6RB6lcqwB5wcR6CiKxIJfFGF68YNLIxLc9Bt9FSGpGq7PitoLX3EIsFBJb%2DXyoITa2BUx8sKFGZZw8ogGL6iSVMLNiEoVBjHbTpWnXQx6nI3iUNfHrFTeNTcZcu9EGp9sxveqd1pww%26u%3DaHR0cHMlM2ElMmYlMmZicmluc3RydW1lbnQuY29tJTJmYWRzJTJmY3J1ZGUtb2lsLWRpc3RpbGxhdGlvbi1jb250YWN0JTNmbXNjbGtpZCUzZGUyYjdmYzFjNmNiYjE3YjM3NTYxOTVhNjkwZTE1ZDYx%26rlid%3De2b7fc1c6cbb17b3756195a690e15d61&vqd=4-133688861236622890940261576027108658469&iurl=%7B1%7DIG%3DC5983EE7DF494F319E9237CFC6683BD5%26CID%3D09D4C77C1617627D1D00D05C17EF6338%26ID%3DDevEx%2C5045.1'
+2026-03-19 00:58:12.041 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'website' yielded 0 records for query 'https://oilprice.com/'
+2026-03-19 00:58:12.041 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'website' yielded 0 records for query 'https://markets.businessinsider.com/commodities/oil-price?type=wti&op=1'
+2026-03-19 00:58:12.042 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'website' yielded 0 records for query 'https://www.cnbc.com/oil/'
+2026-03-19 00:58:12.042 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'website' yielded 0 records for query 'https://goldpricez.com/us/oil'
+2026-03-19 00:58:12.042 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'website' yielded 0 records for query 'https://www.oilmonster.com/crude-oil-prices'
+2026-03-19 00:58:12.042 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'website' yielded 0 records for query 'https://www.barchart.com/futures/quotes/CL*0/futures-prices'
+2026-03-19 00:58:12.042 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'website' yielded 0 records for query 'https://www.oilpriceapi.com/live/wti-crude-oil-price'
+2026-03-19 00:58:12.042 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'website' yielded 0 records for query 'https://www.worldoil.com/'
+2026-03-19 00:58:12.042 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'website' yielded 0 records for query 'https://www.nbcnews.com/business/markets/oil-gas-prices-stock-drop-iran-war-rcna262079'
+2026-03-19 00:58:12.043 | INFO     | core.scraper_engine:run_async:223 - Query 'oil' yielded 18 raw records
+2026-03-19 00:58:14.216 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'discovery' yielded 0 records for query 'oil kolkata'
+2026-03-19 00:58:14.217 | WARNING  | scrapers.google_places_scraper:search_and_extract:41 - GOOGLE_API_KEY not set — skipping Google Places scraper. Add GOOGLE_API_KEY=your_key to .env to enable.
+2026-03-19 00:58:14.247 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'google_places' yielded 0 records for query 'oil kolkata'
+2026-03-19 00:58:15.974 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'tradeindia' yielded 0 records for query 'oil kolkata'
+2026-03-19 00:58:16.143 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'google' yielded 0 records for query 'oil kolkata'
+2026-03-19 00:58:17.826 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'justdial' yielded 0 records for query 'oil kolkata'
+2026-03-19 00:58:19.154 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'maps' yielded 0 records for query 'oil kolkata'
+2026-03-19 00:58:24.310 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'linkedin' yielded 0 records for query 'oil kolkata'
+2026-03-19 00:58:25.211 | WARNING  | scrapers.indiamart_scraper:search_and_extract:22 - IndiaMart search fetch failed for 'oil kolkata': RetryError[<Future at 0x10f9ef590 state=finished raised ClientResponseError>]
+2026-03-19 00:58:25.212 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'indiamart' yielded 0 records for query 'oil kolkata'
+2026-03-19 00:58:48.444 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'searx' yielded 0 records for query 'oil kolkata'
+2026-03-19 00:58:48.445 | WARNING  | core.scraper_engine:_run_for_query:189 - No discovered website targets for query 'oil kolkata', skipping website scraper
+2026-03-19 00:58:48.446 | INFO     | core.scraper_engine:run_async:223 - Query 'oil kolkata' yielded 0 raw records
+2026-03-19 00:58:50.207 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'discovery' yielded 0 records for query 'oil oil'
+2026-03-19 00:58:50.209 | WARNING  | scrapers.google_places_scraper:search_and_extract:41 - GOOGLE_API_KEY not set — skipping Google Places scraper. Add GOOGLE_API_KEY=your_key to .env to enable.
+2026-03-19 00:58:50.226 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'google_places' yielded 0 records for query 'oil oil'
+2026-03-19 00:58:52.459 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'google' yielded 0 records for query 'oil oil'
+2026-03-19 00:58:53.027 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'justdial' yielded 0 records for query 'oil oil'
+2026-03-19 00:58:53.686 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'maps' yielded 0 records for query 'oil oil'
+2026-03-19 00:58:55.363 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'tradeindia' yielded 0 records for query 'oil oil'
+2026-03-19 00:58:58.387 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'linkedin' yielded 0 records for query 'oil oil'
+2026-03-19 00:59:00.919 | WARNING  | scrapers.indiamart_scraper:search_and_extract:22 - IndiaMart search fetch failed for 'oil oil': RetryError[<Future at 0x10f104350 state=finished raised ClientResponseError>]
+2026-03-19 00:59:00.920 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'indiamart' yielded 0 records for query 'oil oil'
+2026-03-19 00:59:24.707 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'searx' yielded 0 records for query 'oil oil'
+2026-03-19 00:59:24.708 | WARNING  | core.scraper_engine:_run_for_query:189 - No discovered website targets for query 'oil oil', skipping website scraper
+2026-03-19 00:59:24.708 | INFO     | core.scraper_engine:run_async:223 - Query 'oil oil' yielded 0 raw records
+2026-03-19 00:59:24.766 | INFO     | backend_api:_run_scrape_job:268 - Scrape job %s completed with %d records
+2026-03-19 01:39:57.722 | INFO     | backend_api:_run_scrape_job:244 - Starting background scrape job %s with %d queries
+2026-03-19 01:39:57.723 | INFO     | core.scraper_engine:run_async:202 - Queries executed: 3
+2026-03-19 01:39:59.527 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'discovery' yielded 0 records for query 'wholesale furniture'
+2026-03-19 01:39:59.528 | WARNING  | scrapers.google_places_scraper:search_and_extract:41 - GOOGLE_API_KEY not set — skipping Google Places scraper. Add GOOGLE_API_KEY=your_key to .env to enable.
+2026-03-19 01:39:59.542 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'google_places' yielded 0 records for query 'wholesale furniture'
+2026-03-19 01:40:01.177 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'maps' yielded 0 records for query 'wholesale furniture'
+2026-03-19 01:40:01.768 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'justdial' yielded 0 records for query 'wholesale furniture'
+2026-03-19 01:40:01.941 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'google' yielded 0 records for query 'wholesale furniture'
+2026-03-19 01:40:02.179 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'tradeindia' yielded 0 records for query 'wholesale furniture'
+2026-03-19 01:40:09.180 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'linkedin' yielded 0 records for query 'wholesale furniture'
+2026-03-19 01:40:14.096 | WARNING  | scrapers.indiamart_scraper:search_and_extract:22 - IndiaMart search fetch failed for 'wholesale furniture': RetryError[<Future at 0x10fdfd010 state=finished raised ClientResponseError>]
+2026-03-19 01:40:14.101 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'indiamart' yielded 0 records for query 'wholesale furniture'
+2026-03-19 01:40:35.398 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'searx' yielded 0 records for query 'wholesale furniture'
+2026-03-19 01:40:35.399 | WARNING  | core.scraper_engine:_run_for_query:189 - No discovered website targets for query 'wholesale furniture', skipping website scraper
+2026-03-19 01:40:35.399 | INFO     | core.scraper_engine:run_async:223 - Query 'wholesale furniture' yielded 0 raw records
+2026-03-19 01:40:36.806 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'discovery' yielded 0 records for query 'wholesale furniture kolkata'
+2026-03-19 01:40:36.807 | WARNING  | scrapers.google_places_scraper:search_and_extract:41 - GOOGLE_API_KEY not set — skipping Google Places scraper. Add GOOGLE_API_KEY=your_key to .env to enable.
+2026-03-19 01:40:36.825 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'google_places' yielded 0 records for query 'wholesale furniture kolkata'
+2026-03-19 01:40:38.896 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'tradeindia' yielded 0 records for query 'wholesale furniture kolkata'
+2026-03-19 01:40:39.340 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'maps' yielded 0 records for query 'wholesale furniture kolkata'
+2026-03-19 01:40:40.351 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'justdial' yielded 0 records for query 'wholesale furniture kolkata'
+2026-03-19 01:40:42.311 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'google' yielded 0 records for query 'wholesale furniture kolkata'
+2026-03-19 01:40:44.507 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'linkedin' yielded 0 records for query 'wholesale furniture kolkata'
+2026-03-19 01:40:47.884 | WARNING  | scrapers.indiamart_scraper:search_and_extract:22 - IndiaMart search fetch failed for 'wholesale furniture kolkata': RetryError[<Future at 0x10fe4ddd0 state=finished raised ClientResponseError>]
+2026-03-19 01:40:47.885 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'indiamart' yielded 0 records for query 'wholesale furniture kolkata'
+2026-03-19 01:41:12.955 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'searx' yielded 0 records for query 'wholesale furniture kolkata'
+2026-03-19 01:41:12.956 | WARNING  | core.scraper_engine:_run_for_query:189 - No discovered website targets for query 'wholesale furniture kolkata', skipping website scraper
+2026-03-19 01:41:12.956 | INFO     | core.scraper_engine:run_async:223 - Query 'wholesale furniture kolkata' yielded 0 raw records
+2026-03-19 01:41:14.670 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'discovery' yielded 0 records for query 'wholesale furniture furniture'
+2026-03-19 01:41:14.671 | WARNING  | scrapers.google_places_scraper:search_and_extract:41 - GOOGLE_API_KEY not set — skipping Google Places scraper. Add GOOGLE_API_KEY=your_key to .env to enable.
+2026-03-19 01:41:14.686 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'google_places' yielded 0 records for query 'wholesale furniture furniture'
+2026-03-19 01:41:16.709 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'justdial' yielded 0 records for query 'wholesale furniture furniture'
+2026-03-19 01:41:16.815 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'google' yielded 0 records for query 'wholesale furniture furniture'
+2026-03-19 01:41:20.537 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'tradeindia' yielded 0 records for query 'wholesale furniture furniture'
+2026-03-19 01:41:20.968 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'maps' yielded 0 records for query 'wholesale furniture furniture'
+2026-03-19 01:41:22.079 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'linkedin' yielded 0 records for query 'wholesale furniture furniture'
+2026-03-19 01:41:28.412 | WARNING  | scrapers.indiamart_scraper:search_and_extract:22 - IndiaMart search fetch failed for 'wholesale furniture furniture': RetryError[<Future at 0x10f927410 state=finished raised ClientResponseError>]
+2026-03-19 01:41:28.415 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'indiamart' yielded 0 records for query 'wholesale furniture furniture'
+2026-03-19 01:41:46.385 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'searx' yielded 0 records for query 'wholesale furniture furniture'
+2026-03-19 01:41:46.385 | WARNING  | core.scraper_engine:_run_for_query:189 - No discovered website targets for query 'wholesale furniture furniture', skipping website scraper
+2026-03-19 01:41:46.386 | INFO     | core.scraper_engine:run_async:223 - Query 'wholesale furniture furniture' yielded 0 raw records
+2026-03-19 01:41:46.407 | INFO     | backend_api:_run_scrape_job:268 - Scrape job %s completed with %d records
+2026-03-19 01:45:32.484 | INFO     | backend_api:_run_scrape_job:244 - Starting background scrape job %s with %d queries
+2026-03-19 01:45:32.485 | INFO     | core.scraper_engine:run_async:202 - Queries executed: 3
+2026-03-19 01:45:34.436 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'discovery' yielded 0 records for query 'wholesale furniture'
+2026-03-19 01:45:34.437 | WARNING  | scrapers.google_places_scraper:search_and_extract:41 - GOOGLE_API_KEY not set — skipping Google Places scraper. Add GOOGLE_API_KEY=your_key to .env to enable.
+2026-03-19 01:45:34.451 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'google_places' yielded 0 records for query 'wholesale furniture'
+2026-03-19 01:45:36.090 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'tradeindia' yielded 0 records for query 'wholesale furniture'
+2026-03-19 01:45:36.456 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'google' yielded 0 records for query 'wholesale furniture'
+2026-03-19 01:45:39.456 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'maps' yielded 0 records for query 'wholesale furniture'
+2026-03-19 01:45:40.649 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'justdial' yielded 0 records for query 'wholesale furniture'
+2026-03-19 01:45:41.896 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'linkedin' yielded 0 records for query 'wholesale furniture'
+2026-03-19 01:45:45.646 | WARNING  | scrapers.indiamart_scraper:search_and_extract:22 - IndiaMart search fetch failed for 'wholesale furniture': RetryError[<Future at 0x10dd28a10 state=finished raised ClientResponseError>]
+2026-03-19 01:45:45.648 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'indiamart' yielded 0 records for query 'wholesale furniture'
+2026-03-19 01:46:07.776 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'searx' yielded 0 records for query 'wholesale furniture'
+2026-03-19 01:46:07.778 | WARNING  | core.scraper_engine:_run_for_query:189 - No discovered website targets for query 'wholesale furniture', skipping website scraper
+2026-03-19 01:46:07.778 | INFO     | core.scraper_engine:run_async:223 - Query 'wholesale furniture' yielded 0 raw records
+2026-03-19 01:46:09.961 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'discovery' yielded 0 records for query 'wholesale furniture kolkata'
+2026-03-19 01:46:09.963 | WARNING  | scrapers.google_places_scraper:search_and_extract:41 - GOOGLE_API_KEY not set — skipping Google Places scraper. Add GOOGLE_API_KEY=your_key to .env to enable.
+2026-03-19 01:46:09.975 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'google_places' yielded 0 records for query 'wholesale furniture kolkata'
+2026-03-19 01:46:11.775 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'tradeindia' yielded 0 records for query 'wholesale furniture kolkata'
+2026-03-19 01:46:13.353 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'justdial' yielded 0 records for query 'wholesale furniture kolkata'
+2026-03-19 01:46:14.515 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'google' yielded 0 records for query 'wholesale furniture kolkata'
+2026-03-19 01:46:15.904 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'maps' yielded 0 records for query 'wholesale furniture kolkata'
+2026-03-19 01:46:16.430 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'linkedin' yielded 0 records for query 'wholesale furniture kolkata'
+2026-03-19 01:46:22.553 | WARNING  | scrapers.indiamart_scraper:search_and_extract:22 - IndiaMart search fetch failed for 'wholesale furniture kolkata': RetryError[<Future at 0x10f347950 state=finished raised ClientResponseError>]
+2026-03-19 01:46:22.557 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'indiamart' yielded 0 records for query 'wholesale furniture kolkata'
+2026-03-19 01:46:43.192 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'searx' yielded 0 records for query 'wholesale furniture kolkata'
+2026-03-19 01:46:43.193 | WARNING  | core.scraper_engine:_run_for_query:189 - No discovered website targets for query 'wholesale furniture kolkata', skipping website scraper
+2026-03-19 01:46:43.193 | INFO     | core.scraper_engine:run_async:223 - Query 'wholesale furniture kolkata' yielded 0 raw records
+2026-03-19 01:46:44.880 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'discovery' yielded 0 records for query 'wholesale furniture wholesale furniture'
+2026-03-19 01:46:44.880 | WARNING  | scrapers.google_places_scraper:search_and_extract:41 - GOOGLE_API_KEY not set — skipping Google Places scraper. Add GOOGLE_API_KEY=your_key to .env to enable.
+2026-03-19 01:46:44.906 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'google_places' yielded 0 records for query 'wholesale furniture wholesale furniture'
+2026-03-19 01:46:47.038 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'google' yielded 0 records for query 'wholesale furniture wholesale furniture'
+2026-03-19 01:46:48.193 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'maps' yielded 0 records for query 'wholesale furniture wholesale furniture'
+2026-03-19 01:46:50.173 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'justdial' yielded 0 records for query 'wholesale furniture wholesale furniture'
+2026-03-19 01:46:51.579 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'linkedin' yielded 0 records for query 'wholesale furniture wholesale furniture'
+2026-03-19 01:46:56.464 | WARNING  | scrapers.indiamart_scraper:search_and_extract:22 - IndiaMart search fetch failed for 'wholesale furniture wholesale furniture': RetryError[<Future at 0x10f402210 state=finished raised ClientResponseError>]
+2026-03-19 01:46:56.468 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'indiamart' yielded 0 records for query 'wholesale furniture wholesale furniture'
+2026-03-19 01:47:02.069 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'tradeindia' yielded 0 records for query 'wholesale furniture wholesale furniture'
+2026-03-19 01:47:19.509 | INFO     | core.scraper_engine:_run_platforms_for_term:124 - Platform 'searx' yielded 0 records for query 'wholesale furniture wholesale furniture'
+2026-03-19 01:47:19.511 | WARNING  | core.scraper_engine:_run_for_query:189 - No discovered website targets for query 'wholesale furniture wholesale furniture', skipping website scraper
+2026-03-19 01:47:19.511 | INFO     | core.scraper_engine:run_async:223 - Query 'wholesale furniture wholesale furniture' yielded 0 raw records
+2026-03-19 01:47:19.534 | INFO     | backend_api:_run_scrape_job:268 - Scrape job %s completed with %d records

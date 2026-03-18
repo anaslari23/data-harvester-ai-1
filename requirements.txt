@@ -21,3 +21,4 @@ uvicorn
 python-multipart
 playwright
 mangum
+supabase
