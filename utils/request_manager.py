@@ -5,6 +5,7 @@ Smart HTTP + Browser request manager.
 - Browser requests: Playwright stealth mode for JS-heavy / bot-protected sites
 - Per-request proxy rotation: each browser context gets its own proxy IP
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -31,17 +32,22 @@ USER_AGENTS = [
 
 # Sites that need full JS rendering / have strong anti-bot protection
 BROWSER_REQUIRED_DOMAINS = {
+    "bing.com",
+    "duckduckgo.com",
+    "google.com",
+    "search.yahoo.com",
     "linkedin.com",
     "justdial.com",
     "clutch.co",
     "goodfirms.co",
     "indiamart.com",
     "tradeindia.com",
+    "searx",
+    "search.",
 }
 
 
 class RequestManager:
-
     def __init__(
         self,
         proxy_config: Dict[str, Any] | None = None,
@@ -115,7 +121,9 @@ class RequestManager:
     # HTTP fetch with retry + rate limiting + rotating proxy
     # ------------------------------------------------------------------
 
-    @retry(wait=wait_exponential(multiplier=1, min=2, max=15), stop=stop_after_attempt(3))
+    @retry(
+        wait=wait_exponential(multiplier=1, min=2, max=15), stop=stop_after_attempt(3)
+    )
     async def get_text(self, url: str, *, headers: Dict[str, str] | None = None) -> str:
         if not self._session:
             raise RuntimeError(
@@ -164,6 +172,7 @@ class RequestManager:
 def _extract_domain(url: str) -> str:
     try:
         from urllib.parse import urlparse
+
         return urlparse(url).netloc.lower()
     except Exception:
         return ""

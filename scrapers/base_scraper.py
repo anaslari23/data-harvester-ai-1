@@ -7,7 +7,6 @@ from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 
 from extractors.address_extractor import extract_addresses
-from extractors.decision_maker_extractor import extract_decision_makers
 from extractors.email_extractor import extract_emails
 from extractors.phone_extractor import extract_phones
 from utils.request_manager import RequestManager
@@ -35,16 +34,14 @@ class BaseScraper(ABC):
         record: Dict[str, Any] = {
             "company_name": "",
             "website": "",
-            "decision_maker": "",
             "phone": "",
             "email": "",
             "address": "",
+            "city": "",
+            "state": "",
+            "country": "",
             "industry": "",
             "industry_type": "",
-            "employee_no": "",
-            "branch_no": "",
-            "annual_turnover": "",
-            "current_erp": "",
             "description": "",
             "additional_info": "",
             "source": "",
@@ -52,7 +49,9 @@ class BaseScraper(ABC):
         record.update(kwargs)
         return record
 
-    async def enrich_from_profile(self, profile_url: str, source: str) -> Dict[str, Any]:
+    async def enrich_from_profile(
+        self, profile_url: str, source: str
+    ) -> Dict[str, Any]:
         if not profile_url:
             return {}
 
@@ -66,7 +65,6 @@ class BaseScraper(ABC):
         emails = extract_emails(text)
         phones = extract_phones(text)
         addresses = extract_addresses(html)
-        decision_makers = extract_decision_makers(html)
         website = self._extract_external_website(soup, profile_url)
         description = self._extract_description(soup, text)
 
@@ -75,18 +73,22 @@ class BaseScraper(ABC):
             "email": emails[0] if emails else "",
             "phone": phones[0] if phones else "",
             "address": addresses[0] if addresses else "",
-            "decision_maker": decision_makers[0] if decision_makers else "",
             "description": description,
+            "source": source,
             "additional_info": f"{source} profile: {profile_url}",
         }
 
-    def merge_records(self, base: Dict[str, Any], extra: Dict[str, Any]) -> Dict[str, Any]:
+    def merge_records(
+        self, base: Dict[str, Any], extra: Dict[str, Any]
+    ) -> Dict[str, Any]:
         merged = dict(base)
         for key, value in extra.items():
             if value and not merged.get(key):
                 merged[key] = value
         if extra.get("additional_info") and base.get("additional_info"):
-            merged["additional_info"] = f"{base['additional_info']} | {extra['additional_info']}"
+            merged["additional_info"] = (
+                f"{base['additional_info']} | {extra['additional_info']}"
+            )
         return merged
 
     def _extract_external_website(self, soup: BeautifulSoup, profile_url: str) -> str:
@@ -95,7 +97,20 @@ class BaseScraper(ABC):
             if not href or href.startswith(("mailto:", "tel:", "#", "javascript:")):
                 continue
             absolute = urljoin(profile_url, href)
-            if absolute and absolute != profile_url and not any(blocked in absolute for blocked in ["google.", "linkedin.com", "indiamart.com", "tradeindia.com", "justdial.com"]):
+            if (
+                absolute
+                and absolute != profile_url
+                and not any(
+                    blocked in absolute
+                    for blocked in [
+                        "google.",
+                        "linkedin.com",
+                        "indiamart.com",
+                        "tradeindia.com",
+                        "justdial.com",
+                    ]
+                )
+            ):
                 return absolute
         return ""
 

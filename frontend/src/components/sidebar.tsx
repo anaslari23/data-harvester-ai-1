@@ -3,7 +3,7 @@
 import type { ComponentType } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BarChart3, BriefcaseBusiness, Cog, Database, PlayCircle, Rows3 } from "lucide-react";
+import { BarChart3, BriefcaseBusiness, Database, PlayCircle, Rows3 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -12,25 +12,27 @@ const items: { href: string; label: string; icon: ComponentType<{ className?: st
   { href: "/scraper", label: "Scraper", icon: PlayCircle },
   { href: "/jobs", label: "Jobs", icon: BriefcaseBusiness },
   { href: "/results", label: "Results", icon: Rows3 },
-  { href: "/settings", label: "Settings", icon: Cog },
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="flex h-full w-full flex-col rounded-[32px] border border-white/10 bg-[radial-gradient(circle_at_top,rgba(11,94,215,0.24),transparent_38%),rgba(255,255,255,0.04)] p-5 shadow-[0_30px_90px_rgba(0,0,0,0.25)] backdrop-blur-xl">
-      <div className="mb-10 flex items-center gap-3 px-2">
-        <div className="grid size-11 place-items-center rounded-2xl bg-[linear-gradient(135deg,var(--accent),#2ad4ff)] text-lg font-black text-[var(--accent-foreground)]">
+    <aside className="relative flex h-full w-full flex-col overflow-hidden rounded-[32px] border border-white/5 bg-black/40 p-6 shadow-2xl backdrop-blur-3xl">
+      {/* Subtle aesthetic glow */}
+      <div className="pointer-events-none absolute left-0 right-0 top-0 h-40 bg-gradient-to-b from-[#5e35b1]/15 to-transparent" />
+
+      <div className="relative z-10 mb-12 flex items-center gap-4 px-2">
+        <div className="flex size-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#5e35b1] to-indigo-600 text-lg font-black text-white shadow-lg shadow-[#5e35b1]/20">
           DH
         </div>
         <div>
-          <p className="text-sm uppercase tracking-[0.28em] text-[var(--muted-foreground)]">DataHarvester</p>
-          <h1 className="text-lg font-semibold text-white">Company Intelligence</h1>
+          <h1 className="text-lg font-bold tracking-tight text-white">DataHarvester</h1>
+          <p className="text-xs uppercase tracking-[0.2em] text-[#888888]">Intelligence</p>
         </div>
       </div>
 
-      <nav className="space-y-2">
+      <nav className="relative z-10 space-y-2">
         {items.map(({ href, label, icon: Icon }) => {
           const active = pathname === href;
           return (
@@ -38,26 +40,35 @@ export function Sidebar() {
               key={href}
               href={href}
               className={cn(
-                "flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition",
+                "group flex items-center gap-4 rounded-xl px-4 py-3.5 text-sm font-medium transition-all duration-300",
                 active
-                  ? "bg-white text-slate-950 shadow-[0_16px_35px_rgba(255,255,255,0.16)]"
-                  : "text-[var(--muted-foreground)] hover:bg-white/6 hover:text-white",
+                  ? "bg-white/10 text-white shadow-sm backdrop-blur-md"
+                  : "text-[#888888] hover:bg-white/5 hover:text-white",
               )}
             >
-              <Icon className="size-4" />
+              <Icon className={cn("size-5 transition-transform duration-300", active ? "text-[#a374ff] scale-110" : "group-hover:scale-110 group-hover:text-white")} />
               <span>{label}</span>
             </Link>
           );
         })}
       </nav>
 
-      <div className="mt-auto rounded-[24px] border border-white/10 bg-black/20 p-4">
-        <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-white">
-          <Database className="size-4 text-[var(--accent-soft)]" />
-          Live Throughput
+      <div className="relative z-10 mt-auto">
+        <div className="mb-6 rounded-2xl border border-white/5 bg-white/5 p-4 backdrop-blur-md transition-all hover:bg-white/10">
+          <div className="mb-1 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-white/80">
+            <Database className="size-3.5 text-[#a374ff]" />
+            Live Throughput
+          </div>
+          <p className="text-2xl font-bold tracking-tight text-white">50K</p>
+          <p className="mt-1 text-xs text-[#888888]">Records in virtualized view</p>
         </div>
-        <p className="text-3xl font-semibold text-white">50K</p>
-        <p className="mt-1 text-sm text-[var(--muted-foreground)]">Records supported in virtualized results view.</p>
+
+        <div className="px-2 text-center">
+          <p className="text-[10.5px] font-medium leading-[1.6] tracking-widest text-[#555555] uppercase">
+            Developed by Anas<br />
+            for <span className="text-[#a374ff]/90">Primacy Infotech</span> exclusively
+          </p>
+        </div>
       </div>
     </aside>
   );

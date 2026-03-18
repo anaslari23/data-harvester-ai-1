@@ -1,15 +1,16 @@
 # Platform enable/disable toggles
 # Set to true to include results from the platform, false to skip it.
 #
-# Enabled by default: discovery (Bing), google (DDG), maps (DDG location),
+# Enabled by default: discovery (Bing), searx (metasearch), google (DDG), maps (DDG location),
 # linkedin (DDG + LinkedIn), indiamart, tradeindia, justdial, website (Firecrawl)
 # clutch and goodfirms are IT/software directories — enable if relevant.
 
 discovery: true    # Bing search engine discovery (finds company websites)
+searx: true       # Searx metasearch (aggregates multiple engines)
 website: true      # Deep-scrape company websites found by discovery
 
-google: true       # DuckDuckGo search results
-maps: true         # DuckDuckGo location-based search
+google: true       # DuckDuckGo search results (may be blocked by anti-bot)
+maps: true         # DuckDuckGo location-based search (may be blocked)
 linkedin: true     # LinkedIn company pages (via DDG + stealth browser)
 
 # Official Google Places API — reliable, no bot-blocking, uses GOOGLE_API_KEY from .env

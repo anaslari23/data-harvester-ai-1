@@ -8,25 +8,22 @@ KEY_FIELDS = [
     "website",
     "email",
     "phone",
-    "decision_maker",
     "address",
+    "city",
+    "state",
+    "country",
     "industry",
     "industry_type",
-    "employee_no",
-    "branch_no",
-    "annual_turnover",
-    "current_erp",
     "description",
-    "additional_info",
     "source",
 ]
 
 
 def _dedupe_key(rec: Dict[str, Any]) -> Tuple[str, str, str]:
     return (
-        str(rec.get("company_name", "")).lower(),
-        str(rec.get("website", "")).lower(),
-        str(rec.get("email", "")).lower(),
+        str(rec.get("company_name", "")).lower().strip(),
+        str(rec.get("website", "")).lower().strip(),
+        str(rec.get("email", "")).lower().strip(),
     )
 
 

@@ -19,7 +19,8 @@ class PlatformSettings:
     justdial: bool = True
     clutch: bool = True
     goodfirms: bool = True
-    google_places: bool = False  # Requires GOOGLE_API_KEY env var
+    google_places: bool = False
+    searx: bool = True
 
 
 @dataclass
@@ -28,8 +29,8 @@ class ProxySettings:
     mode: str = "pool"  # pool | webshare | brightdata | smartproxy | custom
     http: str | None = None
     https: str | None = None
-    url: str | None = None        # for mode=custom
-    endpoint: str | None = None   # for mode=webshare/brightdata/smartproxy
+    url: str | None = None  # for mode=custom
+    endpoint: str | None = None  # for mode=webshare/brightdata/smartproxy
     username: str | None = None
     password: str | None = None
     rotation_strategy: str = "round_robin"  # round_robin | random
@@ -55,7 +56,9 @@ def _load_yaml(path: Path) -> Dict[str, Any]:
 def load_settings(project_root: Path) -> Settings:
     raw_platforms_cfg = _load_yaml(project_root / "config" / "platforms.yaml")
     platforms_cfg = raw_platforms_cfg.get("platforms", raw_platforms_cfg)
-    proxies_cfg = _load_yaml(project_root / "config" / "proxies.yaml").get("proxies", {})
+    proxies_cfg = _load_yaml(project_root / "config" / "proxies.yaml").get(
+        "proxies", {}
+    )
 
     platforms = PlatformSettings(
         discovery=bool(platforms_cfg.get("discovery", True)),
@@ -69,6 +72,7 @@ def load_settings(project_root: Path) -> Settings:
         clutch=bool(platforms_cfg.get("clutch", True)),
         goodfirms=bool(platforms_cfg.get("goodfirms", True)),
         google_places=bool(platforms_cfg.get("google_places", False)),
+        searx=bool(platforms_cfg.get("searx", True)),
     )
 
     proxies = ProxySettings(

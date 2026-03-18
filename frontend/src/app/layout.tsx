@@ -20,9 +20,9 @@ export default function RootLayout({ children }: Readonly<{ children: ReactNode 
             <div className="lg:sticky lg:top-5 lg:h-[calc(100vh-2.5rem)]">
               <Sidebar />
             </div>
-            <div className="rounded-[32px] border border-white/10 bg-[rgba(255,255,255,0.03)] shadow-[0_30px_120px_rgba(0,0,0,0.28)] backdrop-blur-xl">
+            <div className="rounded-[32px] border border-white/5 bg-black/40 shadow-2xl backdrop-blur-2xl overflow-hidden">
               <Navbar />
-              <main className="p-4 md:p-8">{children}</main>
+              <main className="p-4 lg:p-10">{children}</main>
             </div>
           </div>
         </div>
