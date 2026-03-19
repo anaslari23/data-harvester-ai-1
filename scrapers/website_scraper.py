@@ -1,3 +1,4 @@
+import asyncio
 import os
 
 from extractors.company_extractor import parse_company_page
@@ -15,7 +16,7 @@ class WebsiteScraper(BaseScraper):
             return []
 
         firecrawl = FirecrawlClient(api_key)
-        content = firecrawl.scrape(query)
+        content = await asyncio.to_thread(firecrawl.scrape, query)
 
         if not content:
             return []
