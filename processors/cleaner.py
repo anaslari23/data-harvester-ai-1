@@ -4,8 +4,9 @@ import re
 from typing import Any, Dict
 from urllib.parse import urlparse
 
-from extractors.email_extractor import EMAIL_REGEX
-from extractors.phone_extractor import PHONE_REGEX
+
+from extractors.email_extractor import is_valid_email
+from extractors.phone_extractor import is_valid_phone
 
 
 TEXT_KEYS = {
@@ -22,36 +23,6 @@ TEXT_KEYS = {
     "description",
     "additional_info",
     "source",
-}
-
-DISPOSABLE_EMAIL_DOMAINS = {
-    "tempmail.com",
-    "guerrillamail.com",
-    "mailinator.com",
-    "throwaway.com",
-    "fakeinbox.com",
-    "10minutemail.com",
-    "temp-mail.org",
-    "yopmail.com",
-    "trashmail.com",
-    "dispostable.com",
-    "maildrop.cc",
-    "getairmail.com",
-    "mailnesia.com",
-    "spamgourmet.com",
-    "mintemail.com",
-    "sharklasers.com",
-    "guerrillamailblock.com",
-    "pokemail.net",
-    "spambox.us",
-}
-
-GENERIC_EMAILS = {
-    "noreply@",
-    "no-reply@",
-    "donotreply@",
-    "hello@",
-    "privacy@",
 }
 
 
@@ -72,26 +43,11 @@ def _valid_url(url: str) -> bool:
 
 
 def _valid_email(email: str) -> bool:
-    if not email:
-        return False
-    email_lower = email.lower()
-    domain = email_lower.split("@")[-1] if "@" in email_lower else ""
-    if domain in DISPOSABLE_EMAIL_DOMAINS:
-        return False
-    if any(email_lower.startswith(gen) for gen in GENERIC_EMAILS):
-        return False
-    return bool(EMAIL_REGEX.fullmatch(email_lower))
+    return is_valid_email(email)
 
 
 def _valid_phone(phone: str) -> bool:
-    if not phone:
-        return False
-    digits = re.sub(r"\D", "", phone)
-    if len(digits) < 10:
-        return False
-    if len(digits) > 15:
-        return False
-    return True
+    return is_valid_phone(phone)
 
 
 def _valid_company_name(name: str) -> bool:

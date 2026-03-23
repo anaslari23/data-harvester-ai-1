@@ -1,30 +1,16 @@
 # Platform enable/disable toggles
-# Set to true to include results from the platform, false to skip it.
-#
-# Recommended for production with FIRECRAWL_API_KEY:
-# - discovery: false (often blocked)
-# - searx: false (often blocked)  
-# - direct_website: true (uses Firecrawl to scrape company websites directly)
 
-discovery: false    # Bing search engine discovery (often blocked in production)
-searx: false       # Searx metasearch (often blocked in production)
-website: true      # Deep-scrape company websites found by discovery
+discovery: false
+searx: false
+website: true      # Deep-scrape company websites
+direct_website: false
 
-# Direct website scraping - uses Firecrawl API to scrape websites directly
-# Works best when query contains company name or is a URL
-direct_website: true
-
-google: false       # DuckDuckGo search results (blocked by anti-bot)
-maps: false         # DuckDuckGo location-based search (blocked by anti-bot)
-linkedin: false    # LinkedIn company pages (blocked by anti-bot)
-
-# Official Google Places API — reliable, no bot-blocking, uses GOOGLE_API_KEY from .env
+google: true       # DuckDuckGo search results
+maps: false
+linkedin: true     # LinkedIn company pages
 google_places: false
-
-# B2B directories — blocked by anti-bot
-indiamart: false   
-tradeindia: false  
-justdial: false    
-
-clutch: false      # Clutch IT company directory
-goodfirms: false   # GoodFirms IT company directory
+indiamart: false
+tradeindia: false
+justdial: false
+clutch: false
+goodfirms: false

@@ -1,11 +1,16 @@
 import os
 import re
 from typing import Dict, List
+from urllib.parse import urlparse
 
 from bs4 import BeautifulSoup
 
-from extractors.email_extractor import extract_emails
-from extractors.phone_extractor import extract_phones
+from extractors.email_extractor import extract_best_email
+from extractors.phone_extractor import extract_best_phone
+from extractors.company_extractor import (
+    extract_company_names_from_text,
+    extract_best_company_name,
+)
 from scrapers.base_scraper import BaseScraper
 from utils.firecrawl_client import FirecrawlClient
 
@@ -19,7 +24,6 @@ class DirectWebsiteScraper(BaseScraper):
             return results
 
         urls = self._extract_urls_from_query(query)
-
         firecrawl = FirecrawlClient(api_key)
 
         for url in urls[:5]:
@@ -28,20 +32,28 @@ class DirectWebsiteScraper(BaseScraper):
                 if not content:
                     continue
 
-                emails = extract_emails(content)
-                phones = extract_phones(content)
+                website_domain = self._extract_domain(url)
+                email = extract_best_email(content, website_domain)
+                phone = extract_best_phone(content)
 
                 soup = BeautifulSoup(content, "lxml")
-                text = soup.get_text(" ", strip=True)
+                text = str(soup.get_text(" ", strip=True))
 
-                company_name = self._extract_company_name(text, url)
+                company_candidates = extract_company_names_from_text(
+                    text, website_domain, max_results=5
+                )
+                company_name = extract_best_company_name(
+                    [c[0] for c in company_candidates], website_domain
+                )
+
+                description = text[:500] if text else ""
 
                 record = self.build_record(
                     company_name=company_name,
                     website=url,
-                    email=emails[0] if emails else "",
-                    phone=phones[0] if phones else "",
-                    description=text[:500] if text else "",
+                    email=email,
+                    phone=phone,
+                    description=description,
                     source="direct_website",
                     additional_info=f"Direct website scrape for: {query}",
                 )
@@ -74,21 +86,11 @@ class DirectWebsiteScraper(BaseScraper):
 
         return urls
 
-    def _extract_company_name(self, text: str, url: str) -> str:
-        if not text:
+    def _extract_domain(self, url: str) -> str:
+        if not url:
             return ""
-
-        lines = text.split("\n")
-        for line in lines[:5]:
-            line = line.strip()
-            if len(line) > 2 and len(line) < 100:
-                if not line.startswith(
-                    ("http", "www", "contact", "email", "phone", "address")
-                ):
-                    return line
-
-        from urllib.parse import urlparse
-
-        domain = urlparse(url).netloc
-        company = domain.replace("www.", "").split(".")[0]
-        return company.replace("-", " ").title()
+        try:
+            parsed = urlparse(url)
+            return parsed.netloc.lower().replace("www.", "")
+        except Exception:
+            return ""
