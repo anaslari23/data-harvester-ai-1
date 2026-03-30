@@ -50,23 +50,103 @@ INDUSTRY_KEYWORDS = {
         "factory",
         "industrial",
         "production",
+        "fabricat",
     ],
-    "Retail": ["retail", "ecommerce", "store", "shop"],
-    "Logistics": ["logistics", "warehouse", "supply chain", "freight", "transport"],
-    "Healthcare": ["healthcare", "medical", "hospital", "pharma", "pharmaceutical"],
-    "Technology": ["software", "saas", "technology", "it services", "digital", "tech"],
-    "Furniture": ["furniture", "interior", "home decor"],
-    "Food & Beverage": ["food", "beverage", "biscuits", "snacks", "bakery", "oil"],
-    "Mining": ["mica", "mining", "minerals"],
-    "Education": ["education", "school", "college", "university", "training"],
-    "Finance": ["finance", "banking", "insurance", "investment"],
-    "Real Estate": ["real estate", "property", "construction", "building"],
-    "Automotive": ["automotive", "vehicle", "car", "transportation"],
-    "Agriculture": ["agriculture", "farming", "organic", "seeds"],
-    "Chemicals": ["chemical", "chemicals", "solvents", "polymers"],
-    "Textiles": ["textile", "textiles", "fabric", "yarn", "garments"],
-    "Oil & Gas": ["oil", "gas", "petroleum", "lubricant", "fuel"],
+    "Retail": ["retail", "ecommerce", "e-commerce", "store", "shop", "wholesaler", "wholesale"],
+    "Logistics": ["logistics", "warehouse", "supply chain", "freight", "transport", "shipping", "courier"],
+    "Healthcare": ["healthcare", "medical", "hospital", "pharma", "pharmaceutical", "clinic", "health"],
+    "Technology": ["software", "saas", "technology", "it services", "digital", "tech", "cyber", "cloud", "ai ", "data"],
+    "Furniture": ["furniture", "interior", "home decor", "furnishing"],
+    "Food & Beverage": ["food", "beverage", "biscuits", "snacks", "bakery", "oil", "dairy", "agro"],
+    "Mining": ["mica", "mining", "minerals", "quarry"],
+    "Education": ["education", "school", "college", "university", "training", "institute", "academy"],
+    "Finance": ["finance", "banking", "insurance", "investment", "nbfc", "fintech"],
+    "Real Estate": ["real estate", "property", "construction", "building", "infra", "developer"],
+    "Automotive": ["automotive", "vehicle", "car", "transportation", "auto parts", "tyre"],
+    "Agriculture": ["agriculture", "farming", "organic", "seeds", "agri", "horticulture"],
+    "Chemicals": ["chemical", "chemicals", "solvents", "polymers", "dyes", "pigment"],
+    "Textiles": ["textile", "textiles", "fabric", "yarn", "garments", "apparel", "weaving"],
+    "Oil & Gas": ["oil", "gas", "petroleum", "lubricant", "fuel", "refinery"],
+    "Toys & Games": ["toy", "toys", "games", "game", "play", "hobby"],
+    "Packaging": ["packaging", "packing", "corrugated", "carton", "box", "container"],
+    "Steel & Metal": ["steel", "metal", "iron", "aluminium", "alloy", "casting", "forging"],
+    "Plastics & Rubber": ["plastic", "rubber", "polymer", "pvc", "polyester"],
+    "Electronics": ["electronics", "electrical", "semiconductor", "pcb", "circuit", "component"],
 }
+
+# Expanded role patterns — covers Owner, IT Head, Finance Head, CEO, Director, etc.
+_CONTACT_PATTERNS = [
+    # CEO / Chief Executive
+    re.compile(
+        r"(?:ceo|chief\s+executive(?:\s+officer)?)\s*[:\-–]\s*"
+        r"(?:Mr\.?|Mrs\.?|Ms\.?|Dr\.?|Er\.?)?\s*"
+        r"([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,3})",
+        re.IGNORECASE,
+    ),
+    # Managing Director / MD
+    re.compile(
+        r"(?:managing\s+director|m\.?d\.?)\s*[:\-–]\s*"
+        r"(?:Mr\.?|Mrs\.?|Ms\.?|Dr\.?)?\s*"
+        r"([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,3})",
+        re.IGNORECASE,
+    ),
+    # Director
+    re.compile(
+        r"\bdirector\s*[:\-–]\s*"
+        r"(?:Mr\.?|Mrs\.?|Ms\.?|Dr\.?)?\s*"
+        r"([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,3})",
+        re.IGNORECASE,
+    ),
+    # Owner / Proprietor
+    re.compile(
+        r"(?:owner|proprietor)\s*[:\-–]\s*"
+        r"(?:Mr\.?|Mrs\.?|Ms\.?|Dr\.?)?\s*"
+        r"([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,3})",
+        re.IGNORECASE,
+    ),
+    # Founder / Co-Founder
+    re.compile(
+        r"(?:co-?founder|founder)\s*[:\-–]\s*"
+        r"(?:Mr\.?|Mrs\.?|Ms\.?|Dr\.?)?\s*"
+        r"([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,3})",
+        re.IGNORECASE,
+    ),
+    # IT Head / Head of IT / CTO / Chief Technology Officer
+    re.compile(
+        r"(?:it\s+head|head\s+of\s+it|cto|chief\s+technology(?:\s+officer)?|it\s+director|technical\s+director)\s*[:\-–]\s*"
+        r"(?:Mr\.?|Mrs\.?|Ms\.?|Dr\.?)?\s*"
+        r"([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,3})",
+        re.IGNORECASE,
+    ),
+    # Finance Head / CFO / Chief Financial Officer
+    re.compile(
+        r"(?:finance\s+head|head\s+of\s+finance|cfo|chief\s+financial(?:\s+officer)?|finance\s+director)\s*[:\-–]\s*"
+        r"(?:Mr\.?|Mrs\.?|Ms\.?|Dr\.?)?\s*"
+        r"([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,3})",
+        re.IGNORECASE,
+    ),
+    # COO / Chief Operating Officer
+    re.compile(
+        r"(?:coo|chief\s+operating(?:\s+officer)?|operations\s+director)\s*[:\-–]\s*"
+        r"(?:Mr\.?|Mrs\.?|Ms\.?|Dr\.?)?\s*"
+        r"([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,3})",
+        re.IGNORECASE,
+    ),
+    # Contact Person (common on IndiaMart / TradeIndia)
+    re.compile(
+        r"contact\s+(?:person|name)\s*[:\-–]?\s*"
+        r"(?:Mr\.?|Mrs\.?|Ms\.?|Dr\.?)?\s*"
+        r"([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,3})",
+        re.IGNORECASE,
+    ),
+    # Name: / Key Person: — generic fallback
+    re.compile(
+        r"(?:key\s+person|authorised\s+signatory|partner)\s*[:\-–]\s*"
+        r"(?:Mr\.?|Mrs\.?|Ms\.?|Dr\.?)?\s*"
+        r"([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,3})",
+        re.IGNORECASE,
+    ),
+]
 
 
 def _extract_first(patterns: List[re.Pattern[str]], text: str) -> str:
@@ -93,15 +173,13 @@ def _extract_branch_count(text: str) -> str:
 
 
 def _extract_contact_name(text: str) -> str:
-    name_patterns = [
-        r"(?:ceo|chief executive)\s*(?:officer)?[:\s]+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2})",
-        r"(?:director|md|managing director)[:\s]+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2})",
-        r"(?:founder|proprietor|owner)[:\s]+([A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,2})",
-    ]
-    for pattern in name_patterns:
-        match = re.search(pattern, text, re.IGNORECASE)
+    for pattern in _CONTACT_PATTERNS:
+        match = pattern.search(text)
         if match:
-            return match.group(1).strip()
+            name = match.group(1).strip()
+            # Basic sanity: at least two words and no obvious noise
+            if len(name.split()) >= 1 and len(name) <= 60:
+                return name
     return ""
 
 

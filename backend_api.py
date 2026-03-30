@@ -40,6 +40,7 @@ from storage.json_writer import write_json
 from storage.sheet_writer import append_to_sheet
 from storage.supabase_writer import get_all_jobs, upsert_job, get_all_companies, upsert_companies, clear_all_jobs
 from utils.logger import setup_logging
+from utils.nl_query_parser import enrich_query_input
 from utils.query_builder import QueryInput, build_queries
 
 load_dotenv(PROJECT_ROOT / ".env")
@@ -246,10 +247,17 @@ async def _run_scrape_job(job_id: str, payload: StartScrapeRequest) -> None:
     try:
         settings = _configure_settings_for_sources(job["sources"])
         engine = ScraperEngine(settings)
+
+        # Parse natural language keyword (e.g. "toys manufacturer in kolkata, india")
+        kw, loc, _ = enrich_query_input(
+            payload.keyword.strip(),
+            payload.location.strip(),
+            payload.industry.strip(),
+        )
         queries = build_queries([
             QueryInput(
-                keyword=payload.keyword.strip(),
-                location=payload.location.strip() or None,
+                keyword=kw,
+                location=loc or None,
                 industry=payload.industry.strip() or None,
             )
         ])
@@ -266,7 +274,8 @@ async def _run_scrape_job(job_id: str, payload: StartScrapeRequest) -> None:
         job["progress"] = 85
         _save_jobs()
 
-        final_records = PIPELINE.run(scraper_result.records)
+        # Use async pipeline to run external enrichment (IndiaMart, TradeIndia, MCA…)
+        final_records = await PIPELINE.run_async(scraper_result.records)
         for index, record in enumerate(final_records, start=1):
             record["id"] = str(index)
             record["SL No."] = str(index)
@@ -312,7 +321,7 @@ async def _run_bulk_scrape_job(job_id: str, query_inputs: list[QueryInput], sour
         job["progress"] = 85
         _save_jobs()
 
-        final_records = PIPELINE.run(scraper_result.records)
+        final_records = await PIPELINE.run_async(scraper_result.records)
         for index, record in enumerate(final_records, start=1):
             record["id"] = str(index)
             record["SL No."] = str(index)

@@ -1,16 +1,16 @@
 # Platform enable/disable toggles
 
-discovery: false
+discovery: true        # Directory-first discovery for Indian SMEs
 searx: false
-website: true      # Deep-scrape company websites
-direct_website: false
+website: true          # Deep-scrape company websites
+direct_website: true   # Fallback: construct URLs from company names
 
-google: true       # DuckDuckGo search results
+google: true           # DuckDuckGo search results
 maps: false
-linkedin: true     # LinkedIn company pages
+linkedin: true         # LinkedIn company pages
 google_places: false
-indiamart: false
-tradeindia: false
-justdial: false
+indiamart: true        # India B2B directory (high-quality SME data)
+tradeindia: true       # India B2B directory (secondary)
+justdial: true         # India business directory (phone + address)
 clutch: false
 goodfirms: false
