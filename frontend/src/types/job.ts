@@ -7,7 +7,13 @@ export type ScrapeSource =
   | "tradeindia"
   | "justdial"
   | "linkedin"
-  | "website";
+  | "website"
+  | "clutch"
+  | "goodfirms"
+  | "google_places"
+  | "searx"
+  | "direct_website"
+  | "discovery";
 
 export type ScrapeJob = {
   id: string;

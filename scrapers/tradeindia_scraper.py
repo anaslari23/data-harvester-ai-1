@@ -6,100 +6,137 @@ from typing import Dict, List
 from bs4 import BeautifulSoup
 from loguru import logger
 
+from extractors.email_extractor import extract_emails
 from extractors.phone_extractor import extract_phones
 from scrapers.base_scraper import BaseScraper
 
-SEARCH_URL = "https://www.tradeindia.com/search.html?search_text={query}"
+DDG_POST_URL = "https://html.duckduckgo.com/html/"
+
+
+def _ddg_captcha(html: str) -> bool:
+    return "bots use DuckDuckGo" in html or "Select all squares" in html
+
+
+def _decode_ddg_href(href: str) -> str:
+    if "duckduckgo.com/l/?" in href or href.startswith("//duckduckgo.com/l/?"):
+        if href.startswith("//"):
+            href = "https:" + href
+        parsed = urllib.parse.parse_qs(urllib.parse.urlparse(href).query)
+        if "uddg" in parsed:
+            return urllib.parse.unquote(parsed["uddg"][0])
+    return href
 
 
 class TradeIndiaScraper(BaseScraper):
     async def search_and_extract(self, query: str) -> List[Dict[str, str]]:
-        url = SEARCH_URL.format(query=urllib.parse.quote_plus(query))
-        
+        # Search for TradeIndia company pages via DuckDuckGo site: filter
+        site_query = f"{query} site:tradeindia.com"
+        logger.info(f"TradeIndia DDG search: '{site_query}'")
+
         try:
-            # Use fetch() which intelligently leverages the stealth browser
-            html = await self.request_manager.fetch(url)
+            html = await self.request_manager.post_form(
+                DDG_POST_URL,
+                data={"q": site_query, "b": "", "kl": "in-en"},
+            )
         except Exception as exc:
-            logger.warning(f"TradeIndia search failed for '{query}': {exc}")
+            logger.warning(f"TradeIndia DDG search failed for '{query}': {exc}")
+            return []
+
+        if _ddg_captcha(html):
+            logger.warning(f"DDG CAPTCHA triggered for TradeIndia search '{query}' — skipping")
             return []
 
         soup = BeautifulSoup(html, "lxml")
+        result_items = (
+            soup.select("div.result__body")
+            or soup.select("div.results_links_deep")
+            or soup.select("div.result")
+        )
+
         records: List[Dict[str, str]] = []
-
-        # Trade India's card selectors
-        for card in soup.select("div.listing_product, div.prod-list, div[data-testid='seller-card']")[:10]:
-            name_el = card.select_one("a.title, h2 a, .company-name a, a[data-testid='seller-name']")
-            if not name_el:
+        for div in result_items[:12]:
+            title_el = (
+                div.select_one("a.result__a")
+                or div.select_one("h2.result__title a")
+                or div.select_one("h2 a")
+            )
+            if not title_el:
                 continue
-            name = name_el.get_text(" ", strip=True)
-            profile_url = self.absolute_url(url, name_el.get("href"))
-            address_el = card.select_one(".listing_address, .seller-address, [data-testid='seller-city']")
-            category_el = card.select_one(".listing_category, .business-type, [data-testid='seller-nature']")
-            description_el = card.select_one(".product-description, .listing_desc")
 
-            # Try to grab employee and turnover stats from the card text
-            card_text = card.get_text(" ", strip=True)
-            phones = extract_phones(card_text)
-            
-            # Often displayed in stats/tags on the card
-            employee_no = ""
-            turnover = ""
-            if "Employees :" in card_text or "Employees:" in card_text:
-                parts = card_text.split("Employees", 1)[1].strip(" :").split(" ")
-                if parts:
-                    employee_no = parts[0]
-            if "Turnover :" in card_text or "Turnover:" in card_text:
-                # E.g. Turnover : 100 - 500 Crore
-                try:
-                    turnover = card_text.split("Turnover", 1)[1].strip(" :").split("|")[0].strip()
-                    # cut off at the next stat if any
-                    turnover = turnover.split("Employees")[0].split("Gst")[0].strip()
-                except Exception:
-                    pass
+            raw_href = title_el.get("href") or ""
+            href = _decode_ddg_href(raw_href)
 
-            # Try fetching profile if stealth browser is working well
-            profile_data = {}
-            if profile_url and profile_url != url:
-                try:
-                    profile_html = await self.request_manager.fetch(profile_url)
-                    p_soup = BeautifulSoup(profile_html, "lxml")
-                    p_text = p_soup.get_text(" ", strip=True)
-                    
-                    # Look for details table in the profile
-                    for row in p_soup.select("tr"):
-                        row_text = row.get_text(" ", strip=True).lower()
-                        if "number of employees" in row_text or "total employees" in row_text:
-                            tds = row.select("td")
-                            if len(tds) > 1:
-                                employee_no = tds[1].get_text(strip=True)
-                        if "annual turnover" in row_text:
-                            tds = row.select("td")
-                            if len(tds) > 1:
-                                turnover = tds[1].get_text(strip=True)
-                        if "nature of business" in row_text or "company type" in row_text:
-                            tds = row.select("td")
-                            if len(tds) > 1:
-                                profile_data["industry_type"] = tds[1].get_text(strip=True)
+            if not href.startswith("http"):
+                continue
+            if "tradeindia.com" not in href:
+                continue
+            if "duckduckgo.com" in href:
+                continue
 
-                    if not profile_data.get("phone"):
-                        p_phones = extract_phones(p_text)
-                        if p_phones:
-                            profile_data["phone"] = p_phones[0]
-                except Exception:
-                    pass
+            name = title_el.get_text(" ", strip=True)
+            snippet_el = (
+                div.select_one("a.result__snippet")
+                or div.select_one(".result__snippet")
+                or div.select_one("p")
+            )
+            description = snippet_el.get_text(" ", strip=True) if snippet_el else ""
+            emails = extract_emails(description)
+            phones = extract_phones(description)
+
+            # Try to fetch the TradeIndia company page for more details
+            address = ""
+            industry_type = ""
+            try:
+                page_html = await self.request_manager.fetch(href)
+                p_soup = BeautifulSoup(page_html, "lxml")
+                page_text = p_soup.get_text(" ", strip=True)
+
+                if not phones:
+                    phones = extract_phones(page_text)
+                if not emails:
+                    emails = extract_emails(page_text)
+
+                # TradeIndia profile table rows
+                for row in p_soup.select("tr, li.detail-item, div.company-details div"):
+                    row_text = row.get_text(" ", strip=True).lower()
+                    tds = row.select("td, span, div")
+                    if "nature of business" in row_text or "company type" in row_text:
+                        if len(tds) > 1:
+                            industry_type = tds[-1].get_text(strip=True)
+                    if "address" in row_text and not address:
+                        if len(tds) > 1:
+                            address = tds[-1].get_text(strip=True)
+
+                # Fallback: look for address in meta/structured data
+                if not address:
+                    addr_el = p_soup.select_one(
+                        ".company-address, .address, [itemprop='address'], .seller-address"
+                    )
+                    if addr_el:
+                        address = addr_el.get_text(" ", strip=True)
+
+                # Better name from page title
+                page_title = p_soup.find("title")
+                if page_title:
+                    t = page_title.get_text(strip=True).split("-")[0].strip()
+                    if t and len(t) > 3:
+                        name = t
+            except Exception:
+                pass
 
             record = self.build_record(
                 company_name=name,
+                website=href,
+                description=description[:400],
+                email=emails[0] if emails else "",
                 phone=phones[0] if phones else "",
-                address=address_el.get_text(" ", strip=True) if address_el else "",
-                industry=category_el.get_text(" ", strip=True) if category_el else profile_data.get("industry_type", ""),
-                industry_type=profile_data.get("industry_type", ""),
-                description=description_el.get_text(" ", strip=True) if description_el else "",
-                employee_no=employee_no,
-                annual_turnover=turnover,
-                additional_info=f"TradeIndia search query: {query}",
+                address=address,
+                industry=industry_type,
+                industry_type=industry_type,
                 source="tradeindia",
+                additional_info=f"TradeIndia via DDG for: {query}",
             )
-            records.append(self.merge_records(record, profile_data))
+            records.append(record)
 
+        logger.info(f"TradeIndia returned {len(records)} records for '{query}'")
         return records

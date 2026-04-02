@@ -20,6 +20,7 @@ OUTPUT_FIELDS = [
     "Annual_Turnover",
     "Current_Use_ERP_Software_Name",
     "Description",
+    "Source",
     "Additional_Information",
 ]
 
@@ -44,6 +45,7 @@ def to_output_schema(records: Iterable[Dict[str, Any]]) -> List[Dict[str, Any]]:
             "Annual_Turnover": str(rec.get("turnover") or ""),
             "Current_Use_ERP_Software_Name": str(rec.get("erp_software") or ""),
             "Description": str(rec.get("description") or ""),
+            "Source": str(rec.get("source") or ""),
             "Additional_Information": str(rec.get("additional_info") or ""),
         }
         result.append(mapped)

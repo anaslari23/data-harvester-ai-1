@@ -31,9 +31,9 @@ USER_AGENTS = [
 ]
 
 # Sites that need full JS rendering / have strong anti-bot protection
+# Note: html.duckduckgo.com is excluded — it works via HTTP POST, not browser
 BROWSER_REQUIRED_DOMAINS = {
     "bing.com",
-    "duckduckgo.com",
     "google.com",
     "search.yahoo.com",
     "linkedin.com",
@@ -42,8 +42,6 @@ BROWSER_REQUIRED_DOMAINS = {
     "goodfirms.co",
     "indiamart.com",
     "tradeindia.com",
-    "searx",
-    "search.",
 }
 
 
@@ -161,6 +159,37 @@ class RequestManager:
 
                 async with self._session.get(
                     url,
+                    headers=base_headers,
+                    proxy=proxy,
+                    allow_redirects=True,
+                ) as resp:
+                    resp.raise_for_status()
+                    return await resp.text()
+
+    async def post_form(self, url: str, data: Dict[str, str], *, headers: Dict[str, str] | None = None) -> str:
+        """HTTP POST with form-encoded data (used for DuckDuckGo HTML search)."""
+        if not self._session:
+            raise RuntimeError("RequestManager used outside context manager.")
+
+        proxy = get_proxy_for_request(self.proxy_config)
+        base_headers: Dict[str, str] = {
+            "User-Agent": random.choice(USER_AGENTS),
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Origin": "https://duckduckgo.com",
+            "Referer": "https://duckduckgo.com/",
+        }
+        if headers:
+            base_headers.update(headers)
+
+        async with self._semaphore:
+            async with self._limiter.limit():
+                if self.delay_seconds > 0:
+                    await asyncio.sleep(random.uniform(self.delay_seconds * 0.6, self.delay_seconds * 1.5))
+                async with self._session.post(
+                    url,
+                    data=data,
                     headers=base_headers,
                     proxy=proxy,
                     allow_redirects=True,

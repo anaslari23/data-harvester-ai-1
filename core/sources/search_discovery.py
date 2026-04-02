@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import re
+import urllib.parse
 from typing import Any
 from urllib.parse import urlparse
 
@@ -14,6 +15,30 @@ from core.sources.justdial_search import JustDialSearch
 from core.sources.types import SeedURL, slugify
 
 
+def _extract_real_url(href: str) -> str:
+    """
+    DDG wraps real URLs in redirect:
+      //duckduckgo.com/l/?uddg=https%3A%2F%2Factualsite.com
+    Extract and decode the actual target URL.
+    """
+    if not href:
+        return ""
+
+    # Handle DDG redirect URLs
+    if "duckduckgo.com/l/" in href:
+        parsed = urllib.parse.urlparse(href)
+        params = urllib.parse.parse_qs(parsed.query)
+        uddg = params.get("uddg", [""])[0]
+        if uddg:
+            return urllib.parse.unquote(uddg)
+
+    # Handle protocol-relative URLs
+    if href.startswith("//"):
+        return "https:" + href
+
+    return href
+
+
 async def duckduckgo_search(query: str, max_results: int = 20) -> list[SeedURL]:
     seeds: list[SeedURL] = []
     url = f"https://html.duckduckgo.com/html/?q={query.replace(' ', '+')}"
@@ -22,25 +47,32 @@ async def duckduckgo_search(query: str, max_results: int = 20) -> list[SeedURL]:
     if not result.success:
         return seeds
 
+    _skip_domains = [
+        "duckduckgo.com", "google.com", "bing.com",
+        "yahoo.com", "baidu.com", "yandex.com",
+    ]
+
     soup = BeautifulSoup(result.html, "lxml")
     for item in soup.select("div.result__body")[:max_results]:
         link_el = item.select_one("a.result__a, a.result__url")
         if not link_el:
             continue
         href = link_el.get("href", "")
-        if not href or "duckduckgo" in href:
+
+        real_url = _extract_real_url(href)
+        if not real_url or not real_url.startswith("http"):
+            continue
+        if any(d in real_url for d in _skip_domains):
             continue
 
-        domain = urlparse(href).netloc
-        if domain and domain not in ("google.com", "bing.com", "yahoo.com"):
-            seeds.append(
-                SeedURL(
-                    url=href,
-                    source_name="duckduckgo",
-                    expected_type="company",
-                    confidence=0.60,
-                )
+        seeds.append(
+            SeedURL(
+                url=real_url,
+                source_name="duckduckgo",
+                expected_type="company",
+                confidence=0.60,
             )
+        )
 
     return seeds
 

@@ -90,7 +90,11 @@ class StartScrapeRequest(BaseModel):
     keyword: str = Field(min_length=1)
     industry: str = ""
     location: str = ""
-    sources: list[Literal["google", "maps", "indiamart", "tradeindia", "justdial", "linkedin", "website"]]
+    sources: list[Literal[
+        "google", "maps", "indiamart", "tradeindia", "justdial",
+        "linkedin", "website", "clutch", "goodfirms", "google_places",
+        "searx", "direct_website", "discovery",
+    ]]
 
 
 class JobResponse(BaseModel):
@@ -112,8 +116,15 @@ class JobResponse(BaseModel):
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup
+    # Startup — reload persisted state from disk/Supabase
     JOBS.clear()
+    JOBS.extend(_load_jobs())
+    COMPANIES.clear()
+    COMPANIES.extend(_load_results())
+    LOGGER.info(
+        "API startup: loaded %d jobs and %d companies from disk",
+        len(JOBS), len(COMPANIES),
+    )
     yield
     # Shutdown (if needed)
     pass
@@ -222,6 +233,7 @@ def _sync_to_sheets() -> int:
 def _configure_settings_for_sources(sources: list[str]) -> Settings:
     settings = copy.deepcopy(BASE_SETTINGS)
     enabled = set(sources)
+    settings.platforms.discovery = "discovery" in enabled
     settings.platforms.google = "google" in enabled
     settings.platforms.maps = "maps" in enabled
     settings.platforms.linkedin = "linkedin" in enabled
@@ -229,8 +241,11 @@ def _configure_settings_for_sources(sources: list[str]) -> Settings:
     settings.platforms.indiamart = "indiamart" in enabled
     settings.platforms.tradeindia = "tradeindia" in enabled
     settings.platforms.justdial = "justdial" in enabled
-    settings.platforms.clutch = False
-    settings.platforms.goodfirms = False
+    settings.platforms.clutch = "clutch" in enabled
+    settings.platforms.goodfirms = "goodfirms" in enabled
+    settings.platforms.google_places = "google_places" in enabled
+    settings.platforms.searx = "searx" in enabled
+    settings.platforms.direct_website = "direct_website" in enabled
     return settings
 
 
@@ -334,19 +349,46 @@ async def _run_bulk_scrape_job(job_id: str, query_inputs: list[QueryInput], sour
         LOGGER.exception("Bulk scrape job %s failed: %s", job_id, exc)
 
 
-    JOBS.extend(_load_jobs())
-    COMPANIES.clear()
-    COMPANIES.extend(_load_results())
-    LOGGER.info(
-        "API startup: loaded {} jobs and {} companies from disk",
-        len(JOBS), len(COMPANIES),
-    )
-    # Triggering reload for progress bars...
-
-
 # ---------------------------------------------------------------------------
 # Endpoints
 # ---------------------------------------------------------------------------
+
+@app.post("/api/parse-query")
+def parse_natural_language_query(body: dict) -> dict:
+    """
+    Parse a natural language query string into structured keyword/location/industry fields.
+    e.g. "Find wholesale furniture manufacturers in Mumbai" →
+         {"keyword": "wholesale furniture manufacturers", "location": "Mumbai", "industry": ""}
+    """
+    import re
+    text = str(body.get("text", "")).strip()
+    if not text:
+        raise HTTPException(status_code=400, detail="text is required")
+
+    keyword = text
+
+    # Remove leading action verbs
+    keyword = re.sub(
+        r"^(?:find|get|search\s+for|look\s+for|discover|show\s+me|"
+        r"list|give\s+me|fetch|scrape|i\s+want|i\s+need)\s+",
+        "", keyword, flags=re.IGNORECASE,
+    ).strip()
+
+    # Extract location via prepositions ("in X", "near X", "from X", "at X", "around X")
+    location = ""
+    loc_pattern = (
+        r"\b(?:in|near|from|at|around|across)\s+"
+        r"([A-Za-z][a-zA-Z\s]+?)"
+        r"(?=\s+(?:who|that|which|providing|with|for|and|,|\.|$)|[,.]|$)"
+    )
+    loc_match = re.search(loc_pattern, keyword, re.IGNORECASE)
+    if loc_match:
+        location = loc_match.group(1).strip().rstrip(".,")
+        keyword = (keyword[: loc_match.start()] + " " + keyword[loc_match.end() :]).strip()
+
+    keyword = re.sub(r"\s+", " ", keyword).strip()
+    return {"keyword": keyword, "location": location, "industry": ""}
+
 
 @app.get("/api/health")
 def health_check() -> dict:
@@ -427,10 +469,13 @@ async def upload_params(
 
     # Parse sources
     source_list: list[str] = [s.strip() for s in sources.split(",") if s.strip()]
-    valid_sources = {"google", "maps", "indiamart", "tradeindia", "justdial", "linkedin", "website"}
+    valid_sources = {
+        "google", "maps", "indiamart", "tradeindia", "justdial", "linkedin",
+        "website", "clutch", "goodfirms", "google_places", "searx", "direct_website", "discovery",
+    }
     source_list = [s for s in source_list if s in valid_sources]
     if not source_list:
-        source_list = ["google", "maps", "indiamart", "tradeindia", "justdial", "linkedin"]
+        source_list = ["google", "maps", "indiamart", "tradeindia", "justdial", "linkedin", "searx"]
 
     # Parse the uploaded file
     query_inputs: list[QueryInput] = []

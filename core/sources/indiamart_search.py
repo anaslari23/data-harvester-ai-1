@@ -3,13 +3,11 @@ from __future__ import annotations
 import asyncio
 import re
 import urllib.parse
-from typing import Any
 from urllib.parse import urlparse
 
 from bs4 import BeautifulSoup
 from loguru import logger
 
-from core.sources.http_utils import fetch_page, extract_phones_from_text
 from core.sources.types import SeedURL, slugify
 
 
@@ -79,6 +77,39 @@ class IndiaMartSearch:
         "[class*='product-title'] a",
     ]
 
+    async def _fetch_indiamart(self, url: str) -> str:
+        """Use Playwright to render IndiaMart's JS content."""
+        try:
+            from playwright.async_api import async_playwright
+
+            async with async_playwright() as p:
+                browser = await p.chromium.launch(
+                    headless=True,
+                    args=[
+                        "--no-sandbox",
+                        "--disable-setuid-sandbox",
+                        "--disable-dev-shm-usage",
+                    ],
+                )
+                page = await browser.new_page()
+                await page.set_extra_http_headers(
+                    {
+                        "User-Agent": (
+                            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                            "AppleWebKit/537.36 (KHTML, like Gecko) "
+                            "Chrome/122.0.0.0 Safari/537.36"
+                        )
+                    }
+                )
+                await page.goto(url, wait_until="networkidle", timeout=30000)
+                await page.wait_for_timeout(3000)
+                html = await page.content()
+                await browser.close()
+                return html
+        except Exception as e:
+            logger.warning(f"Playwright fetch failed for {url}: {e}")
+            return ""
+
     def _build_urls(self, industry: str, city: str) -> list[str]:
         city_enc = urllib.parse.quote_plus(city)
         industry_enc = urllib.parse.quote_plus(industry)
@@ -129,20 +160,14 @@ class IndiaMartSearch:
         for base_url in seed_urls:
             logger.info(f"indiamart_search_attempt: {base_url}")
 
-            result = await fetch_page(base_url)
-            if result.status_code == 404:
+            html = await self._fetch_indiamart(base_url)
+            if not html or len(html) < 500:
                 logger.warning(
-                    f"indiamart_page_404: {base_url} - skipping to next pattern"
+                    f"indiamart_page_empty: {base_url} - skipping to next pattern"
                 )
                 continue
 
-            if not result.success:
-                logger.warning(
-                    f"indiamart_page_failed: {base_url} - status {result.status_code}"
-                )
-                continue
-
-            companies = self._parse_listing_page(result.html, base_url)
+            companies = self._parse_listing_page(html, base_url)
 
             if companies:
                 all_companies.extend(companies)
@@ -155,12 +180,15 @@ class IndiaMartSearch:
 
             await asyncio.sleep(1.0)
 
+        # Deduplicate by full URL path (not domain — all IndiaMART companies share the same domain)
         seen = set()
         unique: list[SeedURL] = []
         for s in all_companies:
-            domain = urlparse(s.url).netloc
-            if domain not in seen:
-                seen.add(domain)
+            parsed = urlparse(s.url)
+            # Use netloc+path as the dedup key so each company profile is kept
+            key = parsed.netloc + parsed.path.rstrip("/")
+            if key not in seen:
+                seen.add(key)
                 unique.append(s)
 
         logger.info(f"indiamart_search_done: {industry}/{city} found={len(unique)}")

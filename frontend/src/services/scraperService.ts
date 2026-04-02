@@ -16,6 +16,11 @@ export async function clearJobs() {
   return data;
 }
 
+export async function parseQuery(text: string): Promise<{ keyword: string; location: string; industry: string }> {
+  const { data } = await api.post("/api/parse-query", { text });
+  return data;
+}
+
 export async function uploadParams(file: File, sources: string) {
   const formData = new FormData();
   formData.append("file", file);

@@ -12,11 +12,14 @@ from scrapers.base_scraper import BaseScraper
 
 
 SEARX_INSTANCES = [
-    ("https://search.bus-hit.me", "https://search.bus-hit.me/search?q={q}&format=html"),
-    ("https://search.us.to", "https://search.us.to/search?q={q}"),
-    ("https://searxng.site", "https://searxng.site/search?q={q}"),
-    ("https://searx.be", "https://searx.be/search?q={q}"),
-    ("https://searx.xyz", "https://searx.xyz/search?q={q}"),
+    ("https://searxng.site", "https://searxng.site/search?q={q}&format=html"),
+    ("https://search.inetol.net", "https://search.inetol.net/search?q={q}&format=html"),
+    ("https://searx.work", "https://searx.work/search?q={q}&format=html"),
+    ("https://priv.au", "https://priv.au/search?q={q}&format=html"),
+    ("https://etsi.me", "https://etsi.me/search?q={q}&format=html"),
+    ("https://searx.tiekoetter.com", "https://searx.tiekoetter.com/search?q={q}&format=html"),
+    ("https://opnxng.com", "https://opnxng.com/search?q={q}&format=html"),
+    ("https://search.sapti.me", "https://search.sapti.me/search?q={q}&format=html"),
 ]
 
 
